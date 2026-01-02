@@ -1,10 +1,10 @@
 {
   "name": "Mainetti Vision: FLY",
   "short_name": "MS FLY",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#121212",
-  "theme_color": "#ff4400",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
   "icons": [
     {
       "src": "icon.png",
