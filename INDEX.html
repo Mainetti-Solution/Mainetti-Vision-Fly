@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checklist Pre-Volo – Mainetti Solution</title>
+
+  <!-- Icone (come richiesto) -->
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <style>
+    :root { --bg:#0b0c10; --card:#111318; --muted:#9aa4b2; --txt:#e8edf2; --acc:#4f8cff; --bad:#ff4f4f; --ok:#3ddc97; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:linear-gradient(180deg,#0b0c10,#0a0b0f); color:var(--txt); }
+    header{ padding:18px 16px; border-bottom:1px solid #1b1f2a; position:sticky; top:0; backdrop-filter: blur(10px); background: rgba(11,12,16,.75); z-index:10;}
+    header h1{ margin:0; font-size:16px; letter-spacing:.3px;}
+    header .sub{ margin-top:6px; color:var(--muted); font-size:12px;}
+    main{ max-width:1100px; margin:0 auto; padding:16px; display:grid; gap:14px; grid-template-columns: 1.15fr .85fr; }
+    @media (max-width: 980px){ main{ grid-template-columns:1fr; } header{ position:static; } }
+    .card{ background: rgba(17,19,24,.9); border:1px solid #1b1f2a; border-radius:14px; padding:14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .card h2{ margin:0 0 10px 0; font-size:14px; }
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width: 560px){ .row{ grid-template-columns:1fr; } }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input, select, textarea{
+      width:100%; padding:10px 10px; border-radius:10px; border:1px solid #242a38;
+      background:#0d1017; color:var(--txt); outline:none;
+    }
+    textarea{ min-height: 72px; resize:vertical; }
+    .pill{ display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid #242a38; border-radius:12px; background:#0d1017; }
+    .pill input{ width:auto; transform: scale(1.15); }
+    .sep{ height:1px; background:#1b1f2a; margin:12px 0; }
+    .mini{ font-size:12px; color:var(--muted); }
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; }
+    button{
+      border:0; border-radius:12px; padding:10px 12px; cursor:pointer;
+      background: #1a2233; color:var(--txt); border:1px solid #26304a;
+    }
+    button.primary{ background: linear-gradient(180deg,#2d6bff,#1b52d6); border-color:#2f64ff; }
+    button.ok{ background: #14251f; border-color:#1f4b3c; color:#d8fff1; }
+    button.danger{ background: #2a1717; border-color:#512121; color:#ffd7d7; }
+    button:disabled{ opacity:.5; cursor:not-allowed; }
+
+    .status{ display:flex; gap:10px; flex-wrap:wrap; }
+    .badge{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #26304a; background:#0d1017; color:var(--muted);}
+    .badge.ok{ border-color:#1f4b3c; color:#bfffe9;}
+    .badge.bad{ border-color:#512121; color:#ffd0d0;}
+
+    .sigbox{ display:grid; gap:10px; }
+    canvas{ width:100%; height:140px; border-radius:12px; border:1px dashed #2a3143; background:#0d1017; touch-action:none;}
+    .hidden{ display:none !important; }
+
+    /* PRINT AREA: offscreen (non display:none) così html2canvas lo può renderizzare */
+    #printWrap{
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      width: 794px;   /* circa A4 a 96dpi */
+      background: white;
+      color: black;
+      padding: 18px;
+      border-radius: 8px;
+    }
+    #printWrap h3{ margin:0 0 10px 0; }
+    #printWrap h4{ margin:14px 0 6px 0; }
+    #printWrap .small{ font-size:11px; color:#333; }
+    #printWrap .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+    #printWrap .box{ border:1px solid #ddd; padding:10px; border-radius:6px; }
+    #printWrap ul{ margin:6px 0 0 18px; }
+    #printWrap img{ max-width: 260px; border:1px solid #ddd; padding:6px; background:white; }
+
+    #toast{ position:fixed; bottom:14px; left:50%; transform:translateX(-50%); background:#0d1017; border:1px solid #26304a; padding:10px 12px; border-radius:999px; color:var(--txt); font-size:13px; opacity:0; transition:.25s; z-index:999;}
+    #toast.show{ opacity:1; }
+
+    .hist-item{ cursor:pointer; }
+    .hist-item:hover{ background: rgba(255,255,255,.03); }
+
+  
+    /* ===== HERO HEADER (Mainetti Vision style) ===== */
+    header.hero{
+      padding: 44px 16px 28px;
+      border-bottom: 1px solid #1b1f2a;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,12,16,.85);
+    }
+    .hero-inner{
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-title{
+      font-size: 44px;
+      letter-spacing: 3px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #e8edf2;
+    }
+    .hero-line{
+      width: 520px;
+      max-width: 92%;
+      height: 3px;
+      background: #ff6a00;
+      margin: 14px auto 14px;
+      border-radius: 99px;
+    }
+    .hero-sub{
+      font-size: 22px;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      color: #9aa4b2;
+    }
+    /* Responsive */
+    @media (max-width: 600px){
+      .hero-title{ font-size: 30px; letter-spacing: 2px; }
+      .hero-sub{ font-size: 16px; letter-spacing: 1.2px; }
+    }
+
+  </style>
+</head>
+
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">MAINETTI VISION: FLY</div>
+    <div class="hero-line"></div>
+    <div class="hero-sub">powered by Mainetti Solution</div>
+  </div>
+</header>
+
+
+<main>
+  <!-- LEFT: FORM -->
+  <section class="card">
+    <h2>1) Dati pre-volo</h2>
+    <div class="row">
+      <div>
+        <label>ID Missione (opzionale)</label>
+        <input id="missionId" placeholder="Es: MS-2026-001" />
+      </div>
+      <div>
+        <label>Data</label>
+        <input id="date" type="date" />
+      </div>
+      <div>
+        <label>Ora (opzionale)</label>
+        <input id="time" type="time" />
+      </div>
+      <div>
+        <label>Località / Area</label>
+        <input id="location" placeholder="Es: Cresciano" />
+      </div>
+      <div>
+        <label>Drone / UAS</label>
+        <input id="uas" placeholder="Es: Autel EVO / DJI..." />
+      </div>
+      <div>
+        <label>Operazione</label>
+        <select id="opType">
+          <option value="">—</option>
+          <option>Ispezione tecnica</option>
+          <option>Termografia / Radiometrica</option>
+          <option>Addestramento</option>
+          <option>Altro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h2>2) Check pre-volo (solo essenziale)</h2>
+
+    <div class="pill"><input type="checkbox" id="areaClear"> <label for="areaClear" style="margin:0;color:var(--txt)">Area di decollo/atterraggio sicura e libera</label></div>
+    <div class="pill"><input type="checkbox" id="meteoOk"> <label for="meteoOk" style="margin:0;color:var(--txt)">Meteo idoneo (vento/precipitazioni/visibilità)</label></div>
+    <div class="pill"><input type="checkbox" id="permitsOk"> <label for="permitsOk" style="margin:0;color:var(--txt)">Permessi/limitazioni verificate (geo-zone, privacy, ecc.)</label></div>
+
+    <div class="sep"></div>
+    <div class="row">
+      <div class="pill"><input type="checkbox" id="battOk"> <label for="battOk" style="margin:0;color:var(--txt)">Batterie (drone + RC) OK</label></div>
+      <div class="pill"><input type="checkbox" id="propsOk"> <label for="propsOk" style="margin:0;color:var(--txt)">Eliche/struttura integre</label></div>
+      <div class="pill"><input type="checkbox" id="camOk"> <label for="camOk" style="margin:0;color:var(--txt)">Camera/sensori OK (lenti pulite, termico ok)</label></div>
+      <div class="pill"><input type="checkbox" id="sdOk"> <label for="sdOk" style="margin:0;color:var(--txt)">SD/archiviazione OK (spazio libero)</label></div>
+      <div class="pill"><input type="checkbox" id="fwOk"> <label for="fwOk" style="margin:0;color:var(--txt)">App/Firmware OK + connessione RC OK</label></div>
+      <div class="pill"><input type="checkbox" id="gnssOk"> <label for="gnssOk" style="margin:0;color:var(--txt)">GNSS / Home point / RTH verificati</label></div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="row">
+      <div>
+        <label>GO / NO-GO</label>
+        <select id="go">
+          <option value="">—</option>
+          <option value="GO">GO</option>
+          <option value="NO-GO">NO-GO</option>
+        </select>
+      </div>
+      <div>
+        <label>Azioni correttive (se NO/criticità)</label>
+        <input id="actions" placeholder="Es: cambio batterie, spostamento area, ecc." />
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <h2>3) Note (opzionali)</h2>
+    <textarea id="notes" placeholder="Note operative, anomalie, condizioni particolari…"></textarea>
+
+    <div class="sep"></div>
+    <div class="btns">
+      <button class="ok" id="saveDraft">Salva bozza</button>
+      <button class="danger" id="reset">Reset</button>
+    </div>
+  </section>
+
+  <!-- RIGHT: SIGN / STORAGE -->
+  <aside class="card">
+    <h2>Firma & Archivio</h2>
+    <div class="status">
+      <div class="badge" id="bDraft">Bozza</div>
+      <div class="badge bad" id="bSigned">Non firmata</div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="row">
+      <div>
+        <label>Operatore (nome e cognome)</label>
+        <input id="opName" placeholder="Es: Aaron Mainetti" />
+      </div>
+      <div>
+        <label>Metodo firma operatore</label>
+        <select id="opSigType">
+          <option value="draw">Disegnata</option>
+          <option value="typed">Digitata</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sigbox" id="opSigDrawBox">
+      <label>Firma operatore (disegna qui)</label>
+      <canvas id="opCanvas"></canvas>
+      <div class="btns">
+        <button id="opClear">Pulisci firma</button>
+      </div>
+    </div>
+
+    <div class="sigbox hidden" id="opSigTypedBox">
+      <label>Firma operatore (testo)</label>
+      <input id="opTyped" placeholder="Nome Cognome" />
+    </div>
+
+    <div class="sep"></div>
+    <div class="pill">
+      <input type="checkbox" id="decl" />
+      <label for="decl" style="margin:0;color:var(--txt)">Dichiaro che i dati inseriti sono corretti e completi.</label>
+    </div>
+
+    <div class="sep"></div>
+    <div class="pill">
+      <input type="checkbox" id="needManager" />
+      <label for="needManager" style="margin:0;color:var(--txt)">Missione soggetta a Responsabile Missione?</label>
+    </div>
+
+    <div id="mgrBlock" class="hidden" style="margin-top:10px;">
+      <div class="row">
+        <div>
+          <label>Responsabile Missione</label>
+          <input id="mgrName" placeholder="Nome Cognome" />
+        </div>
+        <div>
+          <label>Metodo firma responsabile</label>
+          <select id="mgrSigType">
+            <option value="draw">Disegnata</option>
+            <option value="typed">Digitata</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sigbox" id="mgrSigDrawBox">
+        <label>Firma responsabile (disegna qui)</label>
+        <canvas id="mgrCanvas"></canvas>
+        <div class="btns">
+          <button id="mgrClear">Pulisci firma</button>
+        </div>
+      </div>
+
+      <div class="sigbox hidden" id="mgrSigTypedBox">
+        <label>Firma responsabile (testo)</label>
+        <input id="mgrTyped" placeholder="Nome Cognome" />
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="btns">
+      <button class="primary" id="finalize">Chiudi e firma</button>
+      <button class="primary" id="pdf" disabled>Genera PDF</button>
+    </div>
+
+    <div class="sep"></div>
+    <h2>Backup JSON (merge)</h2>
+    <div class="btns">
+      <button id="export">Export</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <button id="importBtn">Import (merge)</button>
+    </div>
+
+    <div class="sep"></div>
+    <h2>Storico (ultimi 10)</h2>
+    <div id="history" class="mini"></div>
+    <div class="btns" style="margin-top:10px;">
+      <button id="exitView" class="danger hidden">Esci consultazione</button>
+    </div>
+  </aside>
+</main>
+
+<!-- PRINT AREA (offscreen, visibile a html2canvas) -->
+<div id="printWrap" aria-hidden="true">
+  <h3>Checklist Pre-Volo – Mainetti Solution</h3>
+  <div class="grid">
+    <div class="box"><b>ID:</b> <span id="p_id">—</span></div>
+    <div class="box"><b>Missione:</b> <span id="p_mission">—</span></div>
+    <div class="box"><b>Data/Ora:</b> <span id="p_dt">—</span></div>
+    <div class="box"><b>Località:</b> <span id="p_loc">—</span></div>
+    <div class="box"><b>UAS:</b> <span id="p_uas">—</span></div>
+    <div class="box"><b>Operazione:</b> <span id="p_type">—</span></div>
+  </div>
+
+  <h4>Check essenziale</h4>
+  <ul id="p_checks"></ul>
+
+  <h4>Esito</h4>
+  <div class="box">
+    <div><b>GO/NO-GO:</b> <span id="p_go">—</span></div>
+    <div><b>Azioni correttive:</b> <span id="p_actions">—</span></div>
+  </div>
+
+  <h4>Note</h4>
+  <div class="box" id="p_notes">—</div>
+
+  <h4>Firme</h4>
+  <div class="box">
+    <div><b>Operatore:</b> <span id="p_op">—</span> • <span class="small" id="p_op_t">—</span></div>
+    <div id="p_op_sig"></div>
+    <hr />
+    <div><b>Resp. Missione:</b> <span id="p_mgr">—</span> • <span class="small" id="p_mgr_t">—</span></div>
+    <div id="p_mgr_sig"></div>
+  </div>
+
+  <div class="small" style="margin-top:10px" id="p_hash"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- PDF libs -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+  const STORAGE_KEY = "ms_preflight_checklists_v2_onefile";
+  const APP_VERSION = "2.0-onefile";
+  const $ = (id) => document.getElementById(id);
+
+  const toast = (msg) => {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 1900);
+  };
+
+  function nowISO(){ return new Date().toISOString(); }
+
+  function uid(){
+    const d = new Date();
+    const pad = (n)=>String(n).padStart(2,"0");
+    const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    const rnd = Math.random().toString(16).slice(2,8);
+    return `cl_${stamp}_${rnd}`;
+  }
+
+  async function sha256(text){
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+
+  function loadAll(){
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch{ return []; }
+  }
+  function saveAll(arr){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+
+  // Signature pad
+  function makePad(canvas){
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let last = null;
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(rect.width * ratio);
+      canvas.height = Math.floor(rect.height * ratio);
+      ctx.setTransform(ratio,0,0,ratio,0,0);
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#e8edf2";
+      clear();
+    }
+    function pos(e){
+      const rect = canvas.getBoundingClientRect();
+      const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+    }
+    function start(e){ drawing = true; last = pos(e); e.preventDefault(); }
+    function move(e){
+      if(!drawing) return;
+      const p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+      e.preventDefault();
+    }
+    function end(){ drawing=false; last=null; }
+    function clear(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+    function isEmpty(){
+      const img = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      for(let i=3;i<img.length;i+=4) if(img[i]!==0) return false;
+      return true;
+    }
+    function toDataURL(){ return canvas.toDataURL("image/png"); }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    canvas.addEventListener("mousedown", start);
+    canvas.addEventListener("mousemove", move);
+    canvas.addEventListener("mouseup", end);
+    canvas.addEventListener("mouseleave", end);
+
+    canvas.addEventListener("touchstart", start, {passive:false});
+    canvas.addEventListener("touchmove", move, {passive:false});
+    canvas.addEventListener("touchend", end);
+
+    return { clear, isEmpty, toDataURL };
+  }
+
+  const opPad = makePad($("opCanvas"));
+  const mgrPad = makePad($("mgrCanvas"));
+
+  function syncSigType(prefix){
+    const type = $(prefix+"SigType").value;
+    $(prefix+"SigDrawBox").classList.toggle("hidden", type !== "draw");
+    $(prefix+"SigTypedBox").classList.toggle("hidden", type !== "typed");
+  }
+
+  $("opSigType").addEventListener("change", ()=>syncSigType("op"));
+  $("mgrSigType").addEventListener("change", ()=>syncSigType("mgr"));
+  syncSigType("op"); syncSigType("mgr");
+
+  $("needManager").addEventListener("change", ()=>{
+    $("mgrBlock").classList.toggle("hidden", !$("needManager").checked);
+  });
+
+  $("opClear").addEventListener("click", ()=>{ opPad.clear(); toast("Firma operatore pulita"); });
+  $("mgrClear").addEventListener("click", ()=>{ mgrPad.clear(); toast("Firma responsabile pulita"); });
+
+  function setBadges(state){
+    $("bDraft").classList.toggle("ok", state==="draft");
+    $("bDraft").textContent = state==="draft" ? "Bozza" : "Archiviata";
+    $("bSigned").classList.toggle("ok", state==="signed");
+    $("bSigned").classList.toggle("bad", state!=="signed");
+    $("bSigned").textContent = state==="signed" ? "Firmata" : "Non firmata";
+  }
+
+  function getData(){
+    return {
+      mission: {
+        mission_id: $("missionId").value.trim(),
+        date: $("date").value,
+        time: $("time").value,
+        location: $("location").value.trim(),
+        uas: $("uas").value.trim(),
+        op_type: $("opType").value
+      },
+      checks: {
+        area_clear: $("areaClear").checked,
+        meteo_ok: $("meteoOk").checked,
+        permits_ok: $("permitsOk").checked,
+        batt_ok: $("battOk").checked,
+        props_ok: $("propsOk").checked,
+        cam_ok: $("camOk").checked,
+        sd_ok: $("sdOk").checked,
+        fw_ok: $("fwOk").checked,
+        gnss_ok: $("gnssOk").checked
+      },
+      outcome: {
+        go: $("go").value,
+        actions: $("actions").value.trim(),
+        notes: $("notes").value.trim()
+      }
+    };
+  }
+
+  function validate(){
+    const d = getData();
+
+    if(!d.mission.date) return "Seleziona la data.";
+    if(!d.mission.location) return "Inserisci la località/area.";
+    if(!d.mission.uas) return "Inserisci il drone/UAS.";
+    if(!d.outcome.go) return "Seleziona GO / NO-GO.";
+
+    if(!$("opName").value.trim()) return "Inserisci il nome operatore.";
+    if(!$("decl").checked) return "Devi accettare la dichiarazione.";
+
+    if($("opSigType").value === "draw"){
+      if(opPad.isEmpty()) return "Firma operatore mancante (disegno).";
+    } else {
+      if(!$("opTyped").value.trim()) return "Firma operatore mancante (testo).";
+    }
+
+    if($("needManager").checked){
+      if(!$("mgrName").value.trim()) return "Inserisci il Responsabile Missione.";
+      if($("mgrSigType").value === "draw"){
+        if(mgrPad.isEmpty()) return "Firma responsabile mancante (disegno).";
+      } else {
+        if(!$("mgrTyped").value.trim()) return "Firma responsabile mancante (testo).";
+      }
+    }
+
+    return null;
+  }
+
+  let currentId = null;
+  let currentRecord = null;
+
+  function resetForm(){
+    currentId = null; currentRecord = null;
+    document.querySelectorAll("input[type=text], input[type=date], input[type=time], textarea").forEach(el=>el.value="");
+    document.querySelectorAll("input[type=checkbox]").forEach(el=>el.checked=false);
+    document.querySelectorAll("select").forEach(el=>el.value="");
+    opPad.clear(); mgrPad.clear();
+    $("mgrBlock").classList.add("hidden");
+    $("pdf").disabled = true;
+    setBadges("draft");
+    renderHistory();
+    toast("Reset fatto");
+  }
+
+  $("reset").addEventListener("click", resetForm);
+
+  $("saveDraft").addEventListener("click", ()=>{
+    const all = loadAll();
+    const id = currentId || uid();
+    const created_at = currentRecord?.created_at || nowISO();
+
+    const rec = {
+      id, created_at,
+      updated_at: nowISO(),
+      version: APP_VERSION,
+      status: "draft",
+      ...getData(),
+      signatures: { operator:null, mission_manager:null },
+      pdf: null
+    };
+
+    const idx = all.findIndex(x=>x.id===id);
+    if(idx>=0) all[idx]=rec; else all.unshift(rec);
+    saveAll(all);
+    currentId = id;
+    currentRecord = rec;
+    setBadges("draft");
+    renderHistory();
+    toast("Bozza salvata");
+  });
+
+  $("finalize").addEventListener("click", ()=>{
+    const err = validate();
+    if(err){ toast(err); return; }
+
+    const all = loadAll();
+    const id = currentId || uid();
+    const created_at = currentRecord?.created_at || nowISO();
+
+    const opSig = ($("opSigType").value === "draw")
+      ? { type:"draw", image_base64: opPad.toDataURL() }
+      : { type:"typed", typed_text: $("opTyped").value.trim() };
+
+    const mgrEnabled = $("needManager").checked;
+    const mgrSig = !mgrEnabled ? null :
+      ($("mgrSigType").value === "draw")
+        ? { type:"draw", image_base64: mgrPad.toDataURL() }
+        : { type:"typed", typed_text: $("mgrTyped").value.trim() };
+
+    const rec = {
+      id, created_at,
+      updated_at: nowISO(),
+      version: APP_VERSION,
+      status: "signed",
+      ...getData(),
+      signatures: {
+        operator: {
+          name: $("opName").value.trim(),
+          declaration_accepted: true,
+          signed_at: nowISO(),
+          ...opSig
+        },
+        mission_manager: mgrEnabled ? {
+          enabled: true,
+          name: $("mgrName").value.trim(),
+          signed_at: nowISO(),
+          ...mgrSig
+        } : { enabled:false }
+      },
+      pdf: null
+    };
+
+    const idx = all.findIndex(x=>x.id===id);
+    if(idx>=0) all[idx]=rec; else all.unshift(rec);
+    saveAll(all);
+    currentId = id;
+    currentRecord = rec;
+
+    $("pdf").disabled = false;
+    setBadges("signed");
+    renderHistory();
+    toast("Checklist firmata. Genera il PDF.");
+  });
+
+  function buildPrint(rec, hash){
+    const m = rec.mission;
+    $("p_id").textContent = rec.id;
+    $("p_mission").textContent = m.mission_id || "—";
+    $("p_dt").textContent = (m.date || "—") + (m.time ? (" " + m.time) : "");
+    $("p_loc").textContent = m.location || "—";
+    $("p_uas").textContent = m.uas || "—";
+    $("p_type").textContent = m.op_type || "—";
+
+    const checks = rec.checks;
+    const labels = [
+      ["area_clear", "Area di decollo/atterraggio sicura e libera"],
+      ["meteo_ok", "Meteo idoneo (vento/precipitazioni/visibilità)"],
+      ["permits_ok", "Permessi/limitazioni verificate (geo-zone, privacy, ecc.)"],
+      ["batt_ok", "Batterie (drone + RC) OK"],
+      ["props_ok", "Eliche/struttura integre"],
+      ["cam_ok", "Camera/sensori OK"],
+      ["sd_ok", "SD/archiviazione OK"],
+      ["fw_ok", "App/Firmware OK + connessione RC OK"],
+      ["gnss_ok", "GNSS / Home point / RTH verificati"]
+    ];
+
+    $("p_checks").innerHTML = labels.map(([k,txt])=>{
+      const v = checks[k] ? "SI" : "NO";
+      return `<li>${escapeHtml(txt)}: <b>${v}</b></li>`;
+    }).join("");
+
+    $("p_go").textContent = rec.outcome.go || "—";
+    $("p_actions").textContent = rec.outcome.actions || "—";
+    $("p_notes").textContent = rec.outcome.notes || "—";
+
+    const op = rec.signatures.operator;
+    $("p_op").textContent = op?.name || "—";
+    $("p_op_t").textContent = op?.signed_at || "—";
+    $("p_op_sig").innerHTML = op?.type==="draw"
+      ? `<img src="${op.image_base64}" alt="firma operatore" />`
+      : `<div><b>Firma digitata:</b> ${escapeHtml(op?.typed_text || "—")}</div>`;
+
+    const mg = rec.signatures.mission_manager;
+    if(mg?.enabled){
+      $("p_mgr").textContent = mg.name || "—";
+      $("p_mgr_t").textContent = mg.signed_at || "—";
+      $("p_mgr_sig").innerHTML = mg.type==="draw"
+        ? `<img src="${mg.image_base64}" alt="firma responsabile" />`
+        : `<div><b>Firma digitata:</b> ${escapeHtml(mg.typed_text || "—")}</div>`;
+    }else{
+      $("p_mgr").textContent = "non previsto";
+      $("p_mgr_t").textContent = "—";
+      $("p_mgr_sig").innerHTML = "";
+    }
+
+    $("p_hash").textContent = `Record hash (SHA-256 su JSON): ${hash}`;
+  }
+
+  $("pdf").addEventListener("click", async ()=>{
+    try{
+      if(!currentRecord || currentRecord.status!=="signed"){
+        toast("Prima firma la checklist."); return;
+      }
+      if(!window.html2canvas || !window.jspdf){
+        toast("Librerie PDF non caricate (serve internet per CDN).");
+        return;
+      }
+
+      const jsonStr = JSON.stringify(currentRecord);
+      const hash = await sha256(jsonStr);
+      buildPrint(currentRecord, hash);
+
+      const wrap = $("printWrap");
+
+      const canvas = await html2canvas(wrap, { scale: 2, backgroundColor: "#ffffff" });
+      const imgData = canvas.toDataURL("image/png");
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p","mm","a4");
+
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgW = pageW;
+      const imgH = (imgProps.height * imgW) / imgProps.width;
+
+      let y = 0;
+      let remaining = imgH;
+
+      // Multi-page “shift”
+      while(remaining > 0){
+        pdf.addImage(imgData, "PNG", 0, y, imgW, imgH);
+        remaining -= pageH;
+        if(remaining > 0){
+          pdf.addPage();
+          y -= pageH;
+        }
+      }
+
+      const filename = `CL_${currentRecord.id}.pdf`;
+      pdf.save(filename);
+
+      // Save PDF metadata (hash sul record JSON)
+      const all = loadAll();
+      const idx = all.findIndex(x=>x.id===currentRecord.id);
+      if(idx>=0){
+        all[idx].pdf = { filename, hash_sha256: hash, generated_at: nowISO() };
+        all[idx].updated_at = nowISO();
+        saveAll(all);
+        currentRecord = all[idx];
+      }
+
+      toast("PDF generato ✅");
+      renderHistory();
+    } catch(e){
+      console.error(e);
+      toast("Errore PDF (vedi console F12).");
+    }
+  });
+
+  // Export/Import merge
+  $("export").addEventListener("click", ()=>{
+    const all = loadAll();
+    const payload = { exported_at: nowISO(), version: APP_VERSION, items: all };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    const d = new Date();
+    const pad=(n)=>String(n).padStart(2,"0");
+    a.download = `backup_${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.json`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Backup esportato");
+  });
+
+  $("importBtn").addEventListener("click", ()=> $("importFile").click());
+  $("importFile").addEventListener("change", async (e)=>{
+    const file = e.target.files?.[0];
+    if(!file) return;
+    try{
+      const txt = await file.text();
+      const incoming = JSON.parse(txt);
+      const items = Array.isArray(incoming) ? incoming : (incoming.items || []);
+      if(!Array.isArray(items)) throw new Error("Formato backup non valido");
+
+      const current = loadAll();
+      const map = new Map(current.map(x=>[x.id, x]));
+      let added=0, updated=0, skipped=0;
+
+      for(const rec of items){
+        if(!rec?.id){ skipped++; continue; }
+        if(!map.has(rec.id)){
+          map.set(rec.id, rec); added++;
+        } else {
+          const old = map.get(rec.id);
+          const oldT = Date.parse(old.updated_at || old.created_at || 0);
+          const newT = Date.parse(rec.updated_at || rec.created_at || 0);
+          if(newT > oldT){ map.set(rec.id, rec); updated++; }
+          else skipped++;
+        }
+      }
+
+      const merged = Array.from(map.values()).sort((a,b)=>{
+        const ta = Date.parse(a.updated_at || a.created_at || 0);
+        const tb = Date.parse(b.updated_at || b.created_at || 0);
+        return tb - ta;
+      });
+
+      saveAll(merged);
+      renderHistory();
+      toast(`Import merge: +${added} • aggiornati ${updated} • saltati ${skipped}`);
+    } catch(err){
+      console.error(err);
+      toast("Errore import backup");
+    } finally {
+      e.target.value = "";
+    }
+  });
+
+
+  function setFormDisabled(disabled){
+    document.querySelectorAll("main input, main select, main textarea, main button").forEach(el=>{
+      // Allow exit view + export/import always
+      const id = el.id || "";
+      const allow = ["export","importBtn","importFile","exitView","pdf"].includes(id);
+      if(allow) return;
+      if(el.tagName === "BUTTON"){
+        // keep reset available? in view mode we rely on exitView
+        el.disabled = disabled;
+      } else {
+        el.disabled = disabled;
+      }
+    });
+    // keep PDF enabled in view if signed
+    if(disabled){
+      $("export").disabled = false;
+      $("importBtn").disabled = false;
+      $("exitView").classList.remove("hidden");
+    } else {
+      $("exitView").classList.add("hidden");
+    }
+  }
+
+  function drawDataUrlToCanvas(canvasId, dataUrl){
+    const c = $(canvasId);
+    const ctx = c.getContext("2d");
+    const img = new Image();
+    img.onload = ()=>{
+      // clear
+      ctx.clearRect(0,0,c.width,c.height);
+      // draw centered maintaining aspect
+      const ratio = Math.min(c.width / img.width, c.height / img.height);
+      const w = img.width * ratio;
+      const h = img.height * ratio;
+      const x = (c.width - w)/2;
+      const y = (c.height - h)/2;
+      ctx.drawImage(img, x, y, w, h);
+    };
+    img.src = dataUrl;
+  }
+
+  function loadRecordById(id){
+    const all = loadAll();
+    const rec = all.find(x=>x.id===id);
+    if(!rec){ toast("Record non trovato"); return; }
+    currentId = rec.id;
+    currentRecord = rec;
+
+    // Fill mission
+    $("missionId").value = rec.mission?.mission_id || "";
+    $("date").value = rec.mission?.date || "";
+    $("time").value = rec.mission?.time || "";
+    $("location").value = rec.mission?.location || "";
+    $("uas").value = rec.mission?.uas || "";
+    $("opType").value = rec.mission?.op_type || "";
+
+    // Fill checks
+    const c = rec.checks || {};
+    $("areaClear").checked = !!c.area_clear;
+    $("meteoOk").checked = !!c.meteo_ok;
+    $("permitsOk").checked = !!c.permits_ok;
+    $("battOk").checked = !!c.batt_ok;
+    $("propsOk").checked = !!c.props_ok;
+    $("camOk").checked = !!c.cam_ok;
+    $("sdOk").checked = !!c.sd_ok;
+    $("fwOk").checked = !!c.fw_ok;
+    $("gnssOk").checked = !!c.gnss_ok;
+
+    // Outcome
+    $("go").value = rec.outcome?.go || "";
+    $("actions").value = rec.outcome?.actions || "";
+    $("notes").value = rec.outcome?.notes || "";
+
+    // Signatures
+    const op = rec.signatures?.operator;
+    if(op){
+      $("opName").value = op.name || "";
+      $("decl").checked = !!op.declaration_accepted;
+      if(op.type === "typed"){
+        $("opSigType").value = "typed";
+        syncSigType("op");
+        $("opTyped").value = op.typed_text || "";
+      } else {
+        $("opSigType").value = "draw";
+        syncSigType("op");
+        // draw signature image onto canvas
+        if(op.image_base64) drawDataUrlToCanvas("opCanvas", op.image_base64);
+      }
+    } else {
+      $("opName").value = "";
+      $("decl").checked = false;
+    }
+
+    const mg = rec.signatures?.mission_manager;
+    if(mg?.enabled){
+      $("needManager").checked = true;
+      $("mgrBlock").classList.remove("hidden");
+      $("mgrName").value = mg.name || "";
+      if(mg.type === "typed"){
+        $("mgrSigType").value = "typed";
+        syncSigType("mgr");
+        $("mgrTyped").value = mg.typed_text || "";
+      } else {
+        $("mgrSigType").value = "draw";
+        syncSigType("mgr");
+        if(mg.image_base64) drawDataUrlToCanvas("mgrCanvas", mg.image_base64);
+      }
+    } else {
+      $("needManager").checked = false;
+      $("mgrBlock").classList.add("hidden");
+      $("mgrName").value = "";
+      $("mgrTyped").value = "";
+    }
+
+    // State / buttons
+    setBadges(rec.status === "signed" ? "signed" : "draft");
+    $("pdf").disabled = !(rec.status === "signed");
+    setFormDisabled(true);
+    toast("Record aperto in consultazione (doppio click).");
+  }
+
+  $("exitView").addEventListener("click", ()=>{
+    setFormDisabled(false);
+    resetForm();
+  });
+
+
+  function renderHistory(){
+    const all = loadAll().slice(0,10);
+    if(!all.length){ $("history").innerHTML = "Nessun record salvato."; return; }
+
+    $("history").innerHTML = all.map(r=>{
+      const m = r.mission || {};
+      const st = r.status === "signed" ? "✅ firmata" : "📝 bozza";
+      return `<div class="hist-item" data-id="${escapeHtml(r.id)}"
+        title="Doppio click per aprire"
+        style="padding:8px 10px;border-bottom:1px solid #1b1f2a;border-radius:10px;">
+        <b>${escapeHtml(m.mission_id || r.id)}</b> — ${escapeHtml(m.date || "-")} — ${escapeHtml(m.uas || "-")}<br/>
+        <span class="mini">${st} • ${escapeHtml(r.id)}</span>
+      </div>`;
+    }).join("");
+
+    document.querySelectorAll(".hist-item").forEach(el=>{
+      el.addEventListener("dblclick", ()=>{
+        const id = el.dataset.id;
+        loadRecordById(id);
+      });
+    });
+  }
+
+
+  // init date default
+  (function init(){
+    const d = new Date();
+    const pad=(n)=>String(n).padStart(2,"0");
+    $("date").value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    setBadges("draft");
+    renderHistory();
+  })();
+</script>
+</body>
+</html>
