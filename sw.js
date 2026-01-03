@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ms-fly-v2.1';
+const CACHE_NAME = 'ms-fly-v2.2';
 const ASSETS = [
   './',
   './index.html',
