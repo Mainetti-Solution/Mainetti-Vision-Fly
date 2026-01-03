@@ -1,248 +1,830 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mainetti Vision: SAR</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mainetti Vision: FLY</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#0b0c10">
+
+  <style>
+    :root { --bg:#0b0c10; --card:#111318; --muted:#9aa4b2; --txt:#e8edf2; --acc:#ff6a00; --bad:#ff4f4f; --ok:#3ddc97; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:linear-gradient(180deg,#0b0c10,#0a0b0f); color:var(--txt); padding-bottom:50px; }
     
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#121212">
-    <meta name="mobile-web-app-capable" content="yes">
+    /* HERO HEADER */
+    header.hero{ padding: 44px 16px 28px; border-bottom: 1px solid #1b1f2a; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: rgba(11,12,16,.85); }
+    .hero-inner{ max-width: 1100px; margin: 0 auto; text-align: center; }
+    .hero-title{ font-size: 44px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #e8edf2; }
+    .hero-line{ width: 520px; max-width: 92%; height: 3px; background: #ff6a00; margin: 14px auto 14px; border-radius: 99px; }
+    .hero-sub{ font-size: 22px; letter-spacing: 2px; text-transform: lowercase; color: #9aa4b2; }
+    @media (max-width: 600px){ .hero-title{ font-size: 30px; } .hero-sub{ font-size: 16px; } }
 
-    <style>
-        :root { --bg-color: #121212; --card-bg: #1e1e1e; --text-main: #e0e0e0; --accent: #ff4400; --spot-color: #ff5252; --search-color: #448aff; --id-color: #69f0ae; }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        h1 { margin-bottom: 5px; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; text-align: center; }
-        .brand-sub { font-size: 0.8rem; color: #888; margin-bottom: 20px; letter-spacing: 1px; }
-        .controls { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 600px; margin-bottom: 30px; background: #2c2c2c; padding: 15px; border-radius: 10px; }
-        @media (min-width: 600px) { .controls { grid-template-columns: 1fr 1fr; } }
-        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #aaa; font-weight: bold; }
-        select { width: 100%; padding: 12px; background-color: #383838; color: white; border: 1px solid #555; border-radius: 6px; font-size: 1rem; outline: none; cursor: pointer; }
-        select:focus { border-color: var(--accent); }
-        .dashboard { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; max-width: 1000px; }
-        @media (min-width: 768px) { .dashboard { grid-template-columns: 1fr 1fr 1fr; } }
-        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border-left: 6px solid gray; display: flex; flex-direction: column; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; font-size: 1.1rem; letter-spacing: 1px; }
-        .card.spot { border-left-color: var(--spot-color); } .card.spot .status { color: var(--spot-color); }
-        .card.search { border-left-color: var(--search-color); } .card.search .status { color: var(--search-color); }
-        .card.id { border-left-color: var(--id-color); } .card.id .status { color: var(--id-color); }
-        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .data-label { color: #888; font-size: 0.9rem; } .data-value { font-weight: bold; font-size: 1.1rem; text-align: right; }
-        .ai-note { margin-top: auto; padding-top: 15px; font-style: italic; color: #aaa; font-size: 0.85rem; line-height: 1.4; border-top: 1px dashed #444; }
-        .warning-box { background-color: #3e2723; color: #ffccbc; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 1rem; text-align: center; border: 1px solid #ff5722; display: none; width: 100%; max-width: 600px; }
-    </style>
+    main{ max-width:1100px; margin:0 auto; padding:16px; display:grid; gap:14px; grid-template-columns: 1.15fr .85fr; }
+    @media (max-width: 980px){ main{ grid-template-columns:1fr; } }
+    
+    .card{ background: rgba(17,19,24,.9); border:1px solid #1b1f2a; border-radius:14px; padding:14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .card h2{ margin:0 0 10px 0; font-size:14px; text-transform:uppercase; letter-spacing:1px; color:var(--acc); }
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width: 560px){ .row{ grid-template-columns:1fr; } }
+    
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input, select, textarea{ width:100%; padding:10px 10px; border-radius:10px; border:1px solid #242a38; background:#0d1017; color:var(--txt); outline:none; }
+    textarea{ min-height: 72px; resize:vertical; }
+    
+    .pill{ display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid #242a38; border-radius:12px; background:#0d1017; transition: background .2s; }
+    .pill:hover{ background:#141822; }
+    .pill input{ width:auto; transform: scale(1.3); accent-color: #ff6a00; }
+    .pill label{ cursor:pointer; font-size:14px; }
+
+    .sep{ height:1px; background:#1b1f2a; margin:12px 0; }
+    .btns{ display:flex; flex-wrap:wrap; gap:10px; }
+    button{ border:0; border-radius:12px; padding:10px 16px; cursor:pointer; background: #1a2233; color:var(--txt); border:1px solid #26304a; font-weight:600;}
+    button.primary{ background: linear-gradient(180deg,#ff6a00,#d45800); border-color:#ff6a00; color:#fff; }
+    button.ok{ background: #14251f; border-color:#1f4b3c; color:#d8fff1; }
+    button.danger{ background: #2a1717; border-color:#512121; color:#ffd7d7; }
+    button:disabled{ opacity:.5; cursor:not-allowed; }
+
+    .status{ display:flex; gap:10px; flex-wrap:wrap; }
+    .badge{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #26304a; background:#0d1017; color:var(--muted);}
+    .badge.ok{ border-color:#1f4b3c; color:#bfffe9;}
+    .badge.bad{ border-color:#512121; color:#ffd0d0;}
+
+    .sigbox{ display:grid; gap:10px; margin-top:10px; padding:10px; border:1px solid #242a38; border-radius:10px; background:#14161c; }
+    canvas{ width:100%; height:140px; border-radius:12px; border:1px dashed #2a3143; background:#0d1017; touch-action:none;}
+    .hidden{ display:none !important; }
+
+    #printWrap{ position: fixed; left: -10000px; top: 0; width: 794px; background: white; color: black; padding: 25px; }
+    #printWrap h3{ margin:0 0 10px 0; border-bottom: 2px solid #ff6a00; padding-bottom:10px; }
+    #printWrap .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; }
+    #printWrap .box{ border:1px solid #ddd; padding:8px; border-radius:4px; background:#f9f9f9; }
+    #printWrap ul{ list-style:none; padding:0; margin:10px 0; display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+    #printWrap li{ border-bottom:1px solid #eee; padding:4px 0; font-size:12px; }
+    #printWrap .sig-print{ margin-top:10px; border:1px solid #eee; padding:5px; }
+
+    #toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0d1017; border:1px solid #ff6a00; padding:10px 20px; border-radius:999px; color:#fff; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:1000;}
+    #toast.show{ opacity:1; }
+    
+    /* HISTORY LIST STYLE */
+    .hist-item{ display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #222; transition:.2s; background: rgba(255,255,255,0.02); margin-bottom:4px; border-radius:8px;}
+    .hist-item:hover{ background: rgba(255,106,0,.05); }
+    .hist-info{ flex-grow:1; padding:12px; cursor:pointer; }
+    .hist-del{ padding:12px 16px; cursor:pointer; font-size:16px; background:transparent; border:none; color:#666; transition:.2s; border-left:1px solid #222; border-radius:0 8px 8px 0;}
+    .hist-del:hover{ color:#ff4f4f; background: rgba(255, 79, 79, 0.15); }
+  </style>
 </head>
+
 <body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">MAINETTI VISION: FLY</div>
+    <div class="hero-line"></div>
+    <div class="hero-sub">Operational Safety System</div>
+  </div>
+</header>
 
-    <h1>Mainetti Vision: SAR</h1>
-    <div class="brand-sub">powered by Mainetti Solution</div>
-
-    <div class="controls">
-        <div>
-            <label>TARGET DA RICERCARE</label>
-            <select id="targetSelect" onchange="updateDashboard()">
-                <option value="PERSONE">Persona Dispersa</option>
-                <option value="CANI">Cani (Media Taglia)</option>
-                <option value="GATTI">Gatti</option>
-                <option value="CAPRE / PECORE">Capre / Pecore</option>
-                <option value="CAVALLI / PONY">Cavalli / Pony</option>
-                <option value="CERVIDI">Cervi / Caprioli</option>
-                <option value="CINGHIALI">Cinghiali</option>
-                <option value="CONIGLI">Conigli</option>
-                <option value="VOLPI">Volpi</option>
-                <option value="LUPI">Lupi</option>
-                <option value="ORSI">Orsi</option>
-                <option value="MAIALI">Maiali</option>
-                <option value="RODITORI">Roditori</option>
-                <option value="UCCELLI">Uccelli</option>
-            </select>
-        </div>
-        <div>
-            <label>TEMPERATURA AMBIENTE</label>
-            <select id="tempSelect" onchange="updateDashboard()">
-                <option value="<0">Sotto 0°C (Inverno/Gelo)</option>
-                <option value="0-10">Tra 0°C e 10°C</option>
-                <option value="10-20">Tra 10°C e 20°C</option>
-                <option value="20-30">Tra 20°C e 30°C</option>
-                <option value=">30">Sopra 30°C (Estate/Critico)</option>
-            </select>
-        </div>
+<main>
+  <section class="card">
+    <h2>1) Dati Missione</h2>
+    <div class="row">
+      <div><label>ID Missione</label><input id="missionId" placeholder="Es: MS-2026-001" /></div>
+      <div><label>Data</label><input id="date" type="date" /></div>
+      <div><label>Ora</label><input id="time" type="time" /></div>
+      <div><label>Località / Area</label><input id="location" placeholder="Es: Cresciano, Ticino" /></div>
+      <div><label>Drone / UAS</label><input id="uas" placeholder="Es: DJI Mavic 3 Cine" /></div>
+      <div><label>N. Operatore (E-ID)</label><input id="opId" value="CHE-RP-tf2s8sv9yo41" placeholder="CHE-RP-..." /></div>
+      <div style="grid-column: span 2">
+        <label>Operazione</label>
+        <select id="opType">
+          <option value="">— Seleziona —</option>
+          <option>Ispezione Tecnica</option>
+          <option>Fotogrammetria / 3D</option>
+          <option>Videografia Cinema</option>
+          <option>Addestramento / Test</option>
+          <option>SAR / Ricerca</option>
+        </select>
+      </div>
     </div>
 
-    <div class="dashboard">
-        <div class="card spot">
-            <div class="card-header"><span>Rilevamento</span><span class="status">SPOT</span></div>
-            <div class="data-row"><span class="data-label">Altezza (AGL)</span><span class="data-value" id="spot-alt">--</span></div>
-            <div class="data-row"><span class="data-label">Velocità</span><span class="data-value" id="spot-vel">--</span></div>
-            <div class="data-row"><span class="data-label">Palette</span><span class="data-value" id="spot-pal">--</span></div>
-            <div class="data-row"><span class="data-label">Range Temp</span><span class="data-value" id="spot-range">--</span></div>
-            <div id="spot-note" class="ai-note">--</div>
-        </div>
-        <div class="card search">
-            <div class="card-header"><span>Ricerca</span><span class="status">SEARCH</span></div>
-            <div class="data-row"><span class="data-label">Altezza (AGL)</span><span class="data-value" id="search-alt">--</span></div>
-            <div class="data-row"><span class="data-label">Velocità</span><span class="data-value" id="search-vel">--</span></div>
-            <div class="data-row"><span class="data-label">Palette</span><span class="data-value" id="search-pal">--</span></div>
-            <div class="data-row"><span class="data-label">Range Temp</span><span class="data-value" id="search-range">--</span></div>
-            <div id="search-note" class="ai-note">--</div>
-        </div>
-        <div class="card id">
-            <div class="card-header"><span>Identifica</span><span class="status">ID</span></div>
-            <div class="data-row"><span class="data-label">Altezza (AGL)</span><span class="data-value" id="id-alt">--</span></div>
-            <div class="data-row"><span class="data-label">Velocità</span><span class="data-value" id="id-vel">--</span></div>
-            <div class="data-row"><span class="data-label">Palette</span><span class="data-value" id="id-pal">--</span></div>
-            <div class="data-row"><span class="data-label">Range Temp</span><span class="data-value" id="id-range">--</span></div>
-            <div id="id-note" class="ai-note">--</div>
-        </div>
+    <div class="sep"></div>
+    <h2>2) Compliance & Sicurezza (EASA/CH)</h2>
+
+    <div class="pill">
+      <input type="checkbox" id="docsOk">
+      <label for="docsOk" style="margin:0;color:var(--txt)"><b>Documenti:</b> Assicurazione RC, Attestato A1/A3 o A2, Manuale</label>
+    </div>
+    <div class="pill">
+      <input type="checkbox" id="eidLabel">
+      <label for="eidLabel" style="margin:0;color:var(--txt)"><b>ID Operatore:</b> Etichetta e-ID presente e visibile sul drone</label>
+    </div>
+    <div class="pill">
+      <input type="checkbox" id="airspaceOk">
+      <label for="airspaceOk" style="margin:0;color:var(--txt)"><b>Spazio Aereo:</b> DABS/NOTAM verificati, Geo-Zone OK</label>
+    </div>
+    <div class="pill">
+      <input type="checkbox" id="areaClear">
+      <label for="areaClear" style="margin:0;color:var(--txt)"><b>Area:</b> Sicura, senza assembramenti, consenso privacy</label>
+    </div>
+    <div class="pill">
+      <input type="checkbox" id="meteoOk">
+      <label for="meteoOk" style="margin:0;color:var(--txt)"><b>Meteo:</b> Vento, Visibilità, KP Index idonei</label>
     </div>
 
-    <div id="global-warning" class="warning-box"></div>
+    <div class="sep"></div>
+    <div class="row">
+      <div class="pill"><input type="checkbox" id="battOk"> <label for="battOk" style="margin:0;color:var(--txt)">Batterie (Celle OK)</label></div>
+      <div class="pill"><input type="checkbox" id="propsOk"> <label for="propsOk" style="margin:0;color:var(--txt)">Eliche/Struttura integre</label></div>
+      <div class="pill"><input type="checkbox" id="camOk"> <label for="camOk" style="margin:0;color:var(--txt)">Payload/SD/Lenti OK</label></div>
+      <div class="pill"><input type="checkbox" id="fwOk"> <label for="fwOk" style="margin:0;color:var(--txt)">App/Firmware (No Errori)</label></div>
+      <div class="pill"><input type="checkbox" id="gnssOk"> <label for="gnssOk" style="margin:0;color:var(--txt)">Home Point + <b>RTH Height</b> OK</label></div>
+    </div>
 
-    <script>
-    const sarData = {
-    "PERSONE": {
-        "<0": { "SPOT": { "h": "42-60m", "v": "3-5m/s", "p": "Red Hot", "r": "15-45°C", "n": "Alt. limitata a 60m (Wide Lens)" }, "SEARCH": { "h": "42-60m", "v": "2-4m/s", "p": "White Hot", "r": "5-45°C", "n": "Delta termico massimo - Ottimo contrasto" }, "IDENTIFY": { "h": "28-40m", "v": "1-2m/s", "p": "W/B Hot", "r": "20-38°C", "n": "Dettagli corporei eccellenti" } },
-        "0-10": { "SPOT": { "h": "42-60m", "v": "3-5m/s", "p": "Red Hot", "r": "15-45°C", "n": "Alt. limitata a 60m (Wide Lens)" }, "SEARCH": { "h": "42-60m", "v": "2-4m/s", "p": "White Hot", "r": "5-45°C", "n": "Buon contrasto termico" }, "IDENTIFY": { "h": "28-40m", "v": "1-2m/s", "p": "W/B Hot", "r": "20-38°C", "n": "Postura e arti ben visibili" } },
-        "10-20": { "SPOT": { "h": "42-60m", "v": "4-6m/s", "p": "Ironbow", "r": "20-45°C", "n": "Alt. limitata a 60m (Wide Lens)" }, "SEARCH": { "h": "42-60m", "v": "3-5m/s", "p": "White Hot", "r": "5-45°C", "n": "Alt. limitata a 60m (Wide Lens)" }, "IDENTIFY": { "h": "31-45m", "v": "1-2m/s", "p": "W/B Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow HC", "r": "25-40°C", "n": "Delta termico basso" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-45°C", "n": "Delta ridotto - SPOT inaffidabile - Volare BASSO" }, "IDENTIFY": { "h": "28-40m", "v": "1-2m/s", "p": "W/B Hot", "r": "20-38°C", "n": "Movimento aiuta identificazione" } },
-        ">30": { "SPOT": { "h": "28-40m", "v": "2-3m/s", "p": "Isoterme", "r": "34-38°C", "n": "CRITICO: Molto difficile" }, "SEARCH": { "h": "28-40m", "v": "1-2m/s", "p": "White Hot", "r": "5-45°C", "n": "CRITICO - Delta minimo - Volo MOLTO basso e lento" }, "IDENTIFY": { "h": "21-30m", "v": "1-3m/s", "p": "W/B Hot", "r": "20-38°C", "n": "Vel. ridotta per motion blur" } }
-    },
-    "CANI": {
-        "<0": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "0-42°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "17-25m", "v": "1-2m/s", "p": "Black Hot", "r": "0-36°C", "n": "Alt. ridotta per ottica 9mm (Max 25m)" } },
-        "0-10": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "0-42°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "17-25m", "v": "1-2m/s", "p": "Black Hot", "r": "0-36°C", "n": "Alt. ridotta per ottica 9mm (Max 25m)" } },
-        "10-20": { "SPOT": { "h": "52-75m", "v": "4-6m/s", "p": "Ironbow", "r": "20-42°C", "n": "Alt. ridotta per ottica 9mm (Max 75m)" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "17-25m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 25m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "Difficile distinguere rocce" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "17-25m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 25m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "31-45m", "v": "2-3m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "17-25m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 25m)" } }
-    },
-    "GATTI": {
-        "<0": { "SPOT": { "h": "31-45m", "v": "3-5m/s", "p": "Ironbow", "r": "18-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "SEARCH": { "h": "21-30m", "v": "1-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "IDENTIFY": { "h": "10-15m", "v": "1-1m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" } },
-        "0-10": { "SPOT": { "h": "31-45m", "v": "3-5m/s", "p": "Ironbow", "r": "18-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "SEARCH": { "h": "21-30m", "v": "1-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "IDENTIFY": { "h": "10-15m", "v": "1-1m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" } },
-        "10-20": { "SPOT": { "h": "31-45m", "v": "3-4m/s", "p": "Ironbow", "r": "20-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "SEARCH": { "h": "21-30m", "v": "1-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "IDENTIFY": { "h": "10-15m", "v": "1-1m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" } },
-        "20-30": { "SPOT": { "h": "15m", "v": "2m/s", "p": "Rain", "r": "25-35°C", "n": "" }, "SEARCH": { "h": "21-30m", "v": "2-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "IDENTIFY": { "h": "10-15m", "v": "1-1m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" } },
-        ">30": { "SPOT": { "h": "10m", "v": "1m/s", "p": "Iso", "r": "35-40°C", "n": "Critico" }, "SEARCH": { "h": "21-30m", "v": "1-2m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "IDENTIFY": { "h": "10-15m", "v": "1-1m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" } }
-    },
-    "CAPRE / PECORE": {
-        "<0": { "SPOT": { "h": "62-90m", "v": "5-7m/s", "p": "Ironbow", "r": "0-42°C", "n": "Alt. ridotta per ottica 9mm (Max 90m)" }, "SEARCH": { "h": "38-55m", "v": "4-6m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 55m)" }, "IDENTIFY": { "h": "21-30m", "v": "2-3m/s", "p": "Black Hot", "r": "0-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        "0-10": { "SPOT": { "h": "62-90m", "v": "5-7m/s", "p": "Ironbow", "r": "0-42°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "38-55m", "v": "4-6m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 55m)" }, "IDENTIFY": { "h": "21-30m", "v": "2-3m/s", "p": "Black Hot", "r": "0-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        "10-20": { "SPOT": { "h": "62-90m", "v": "5-7m/s", "p": "Ironbow", "r": "20-42°C", "n": "Alt. ridotta per ottica 9mm (Max 90m)" }, "SEARCH": { "h": "38-55m", "v": "4-6m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 55m)" }, "IDENTIFY": { "h": "21-30m", "v": "2-3m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "38-55m", "v": "4-6m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 55m)" }, "IDENTIFY": { "h": "21-30m", "v": "2-3m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "38-55m", "v": "3-5m/s", "p": "White Hot", "r": "5-42°C", "n": "Alt. ridotta per ottica 9mm (Max 55m)" }, "IDENTIFY": { "h": "21-30m", "v": "2-3m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } }
-    },
-    "CAVALLI / PONY": {
-        "<0": { "SPOT": { "h": "77-110m", "v": "6-8m/s", "p": "Ironbow", "r": "18-45°C", "n": "Eccellenti - Target molto grande" }, "SEARCH": { "h": "66-95m", "v": "5-7m/s", "p": "White Hot", "r": "5-45°C", "n": "Alt. ridotta per ottica 9mm (Max 95m)" }, "IDENTIFY": { "h": "31-45m", "v": "2-4m/s", "p": "Black Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "0-10": { "SPOT": { "h": "70-100m", "v": "6-8m/s", "p": "Ironbow", "r": "18-45°C", "n": "Molto evidenti - Target grande" }, "SEARCH": { "h": "62-90m", "v": "5-7m/s", "p": "White Hot", "r": "5-45°C", "n": "Sagoma ampia" }, "IDENTIFY": { "h": "31-45m", "v": "2-4m/s", "p": "Black Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "10-20": { "SPOT": { "h": "77-110m", "v": "6-8m/s", "p": "Ironbow", "r": "20-45°C", "n": "Alta visibilità anche a distanza" }, "SEARCH": { "h": "66-95m", "v": "5-7m/s", "p": "White Hot", "r": "5-45°C", "n": "Alt. ridotta per ottica 9mm (Max 95m)" }, "IDENTIFY": { "h": "31-45m", "v": "2-4m/s", "p": "Black Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "20-30": { "SPOT": { "h": "70-100m", "v": "5-7m/s", "p": "Ironbow", "r": "20-45°C", "n": "Dimensioni compensano delta ridotto" }, "SEARCH": { "h": "62-90m", "v": "4-6m/s", "p": "White Hot", "r": "5-45°C", "n": "Ancora ben visibili" }, "IDENTIFY": { "h": "31-45m", "v": "2-4m/s", "p": "Black Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "56-80m", "v": "4-6m/s", "p": "White Hot", "r": "5-45°C", "n": "Difficile ma dimensioni aiutano" }, "IDENTIFY": { "h": "31-45m", "v": "2-3m/s", "p": "Black Hot", "r": "20-38°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } }
-    },
-    "CERVIDI": {
-        "<0": { "SPOT": { "h": "56-80m", "v": "4-6m/s", "p": "Ironbow", "r": "15-40°C", "n": "Ottimi su neve - Contrasto forte" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-40°C", "n": "Pattern zigzag consigliato" }, "IDENTIFY": { "h": "31-45m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "0-10": { "SPOT": { "h": "56-80m", "v": "4-6m/s", "p": "Ironbow", "r": "15-40°C", "n": "Macchia netta anche in bosco" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-40°C", "n": "Scansione lenta efficace" }, "IDENTIFY": { "h": "31-45m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "10-20": { "SPOT": { "h": "56-80m", "v": "4-6m/s", "p": "Ironbow", "r": "18-40°C", "n": "Buona visibilità in bosco" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-40°C", "n": "Sagoma completa" }, "IDENTIFY": { "h": "31-45m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "42-60m", "v": "2-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Delta ridotto - Volare lento" }, "IDENTIFY": { "h": "31-45m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Molto difficile - Ore fresche migliori" }, "IDENTIFY": { "h": "28-40m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Solo se in movimento" } }
-    },
-    "CINGHIALI": {
-        "<0": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Red Hot", "r": "18-42°C", "n": "Eccellenti - Massa corporea alta" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-42°C", "n": "Branchi molto evidenti" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "20-36°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "0-10": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Red Hot", "r": "18-42°C", "n": "Corpo massiccio - Spesso in branco" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-42°C", "n": "Gruppi familiari" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "20-36°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "10-20": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Red Hot", "r": "20-42°C", "n": "Pattern familiare riconoscibile" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-42°C", "n": "Scansione efficace" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "20-36°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "42-60m", "v": "2-4m/s", "p": "White Hot", "r": "5-42°C", "n": "SPOT ingannevole - Preferire SEARCH" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "20-36°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-42°C", "n": "Difficile - Cercare all'alba/tramonto" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "20-36°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } }
-    },
-    "CONIGLI": {
-        "<0": { "SPOT": { "h": "35-50m", "v": "2-4m/s", "p": "Ironbow", "r": "15-38°C", "n": "Macchia visibile su neve - Volare BASSO" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Buon contrasto su neve" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Zoom utile se disponibile" } },
-        "0-10": { "SPOT": { "h": "35-50m", "v": "2-4m/s", "p": "Ironbow", "r": "15-38°C", "n": "Piccola macchia - Volare BASSO" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Spesso immobili - Scansione lenta" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Sensore zoom utile se disponibile" } },
-        "10-20": { "SPOT": { "h": "35-50m", "v": "2-3m/s", "p": "Ironbow", "r": "18-38°C", "n": "Target difficile - Massima attenzione" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Movimento aiuta identificazione" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Conferma breve - Finestra stretta" } },
-        "20-30": { "SPOT": { "h": "15m", "v": "2m/s", "p": "Rain", "r": "25-35°C", "n": "" }, "SEARCH": { "h": "28-40m", "v": "1-2m/s", "p": "White Hot", "r": "5-38°C", "n": "Quasi invisibili - Volo MOLTO basso" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Conferma difficile" } },
-        ">30": { "SPOT": { "h": "10m", "v": "1m/s", "p": "Iso", "r": "35-40°C", "n": "Critico" }, "SEARCH": { "h": "21-30m", "v": "1m/s", "p": "Black Hot", "r": "30-38°C", "n": "Impossibile rilevare se immobili" }, "IDENTIFY": { "h": "14-20m", "v": "1m/s", "p": "Fusion", "r": "30-38°C", "n": "Critico" } }
-    },
-    "VOLPI": {
-        "<0": { "SPOT": { "h": "35-50m", "v": "2-4m/s", "p": "Red Hot", "r": "15-38°C", "n": "Macchia netta in movimento" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Coda molto visibile termicamente" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Sagoma inconfondibile" } },
-        "0-10": { "SPOT": { "h": "35-50m", "v": "2-4m/s", "p": "Red Hot", "r": "15-38°C", "n": "Buon contrasto nel sottobosco" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Movimento rapido e furtivo" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Zoom utile" } },
-        "10-20": { "SPOT": { "h": "35-50m", "v": "2-3m/s", "p": "Ironbow", "r": "18-38°C", "n": "Mimetismo termico parziale" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Cercare movimento" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Conferma rapida necessaria" } },
-        "20-30": { "SPOT": { "h": "15m", "v": "2m/s", "p": "Rain", "r": "25-35°C", "n": "" }, "SEARCH": { "h": "28-40m", "v": "1-2m/s", "p": "White Hot", "r": "5-38°C", "n": "Difficile - Volo basso" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Difficile se ferma" } },
-        ">30": { "SPOT": { "h": "10m", "v": "1m/s", "p": "Iso", "r": "35-40°C", "n": "Critico" }, "SEARCH": { "h": "21-30m", "v": "1m/s", "p": "Black Hot", "r": "30-38°C", "n": "Caccia notturna consigliata" }, "IDENTIFY": { "h": "14-20m", "v": "1m/s", "p": "Fusion", "r": "30-38°C", "n": "Critico" } }
-    },
-    "LUPI": {
-        "<0": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "0-40°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "0-36°C", "n": "Branco o isolati" } },
-        "0-10": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "0-40°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "0-36°C", "n": "Attenzione alla postura coda" } },
-        "10-20": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "20-40°C", "n": "Alt. ridotta per ottica 9mm (Max 70m)" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "31-45m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "31-45m", "v": "2-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 45m)" }, "IDENTIFY": { "h": "21-30m", "v": "1-2m/s", "p": "Black Hot", "r": "18-36°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" } }
-    },
-    "ORSI": {
-        "<0": { "SPOT": { "h": "70-100m", "v": "5-7m/s", "p": "Ironbow", "r": "0-38°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-38°C", "n": "Massa enorme - Ben visibile" }, "IDENTIFY": { "h": "42-60m", "v": "1-2m/s", "p": "Black Hot", "r": "0-34°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" } },
-        "0-10": { "SPOT": { "h": "70-100m", "v": "5-7m/s", "p": "Ironbow", "r": "0-38°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-38°C", "n": "Evidente contrasto" }, "IDENTIFY": { "h": "42-60m", "v": "1-2m/s", "p": "Black Hot", "r": "0-34°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" } },
-        "10-20": { "SPOT": { "h": "70-100m", "v": "5-7m/s", "p": "Ironbow", "r": "18-38°C", "n": "Ben visibile" }, "SEARCH": { "h": "49-70m", "v": "3-5m/s", "p": "White Hot", "r": "5-38°C", "n": "Alt. ridotta per ottica 9mm (Max 70m)" }, "IDENTIFY": { "h": "42-60m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "49-70m", "v": "2-4m/s", "p": "White Hot", "r": "5-38°C", "n": "Isolamento pelo riduce segnale" }, "IDENTIFY": { "h": "42-60m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "49-70m", "v": "2-3m/s", "p": "White Hot", "r": "5-38°C", "n": "Critico con alte temperature" }, "IDENTIFY": { "h": "42-60m", "v": "1-2m/s", "p": "Black Hot", "r": "18-34°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" } }
-    },
-    "MAIALI": {
-        "<0": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Red Hot", "r": "0-40°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "42-60m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "0-35°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "0-10": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Red Hot", "r": "0-40°C", "n": "Range esteso per pelo isolante" }, "SEARCH": { "h": "42-60m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "0-35°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "10-20": { "SPOT": { "h": "49-70m", "v": "4-6m/s", "p": "Ironbow", "r": "20-40°C", "n": "Buon contrasto su fango freddo" }, "SEARCH": { "h": "42-60m", "v": "3-4m/s", "p": "White Hot", "r": "5-40°C", "n": "Alt. ridotta per ottica 9mm (Max 60m)" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        "20-30": { "SPOT": { "h": "35-50m", "v": "3-4m/s", "p": "Rainbow", "r": "20-40°C", "n": "" }, "SEARCH": { "h": "35-50m", "v": "2-3m/s", "p": "White Hot", "r": "5-40°C", "n": "Se coperti di fango segnale debole" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } },
-        ">30": { "SPOT": { "h": "20-30m", "v": "2m/s", "p": "Isoterme", "r": "35-40°C", "n": "QUASI IMPOSSIBILE" }, "SEARCH": { "h": "35-50m", "v": "1-2m/s", "p": "White Hot", "r": "5-40°C", "n": "Caldo + fango = Invisibili" }, "IDENTIFY": { "h": "24-35m", "v": "1-2m/s", "p": "Black Hot", "r": "18-35°C", "n": "Alt. ridotta per ottica 9mm (Max 35m)" } }
-    },
-    "RODITORI": {
-        "<0": { "SPOT": { "h": "10-15m", "v": "1-2m/s", "p": "Red Hot", "r": "0-20°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" }, "SEARCH": { "h": "7-10m", "v": "1m/s", "p": "White Hot", "r": "0-15°C", "n": "Alt. ridotta per ottica 9mm (Max 10m)" }, "IDENTIFY": { "h": "5-5m", "v": "0-1m/s", "p": "Black Hot", "r": "0-20°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "0-10": { "SPOT": { "h": "10-15m", "v": "1-2m/s", "p": "Red Hot", "r": "5-25°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" }, "SEARCH": { "h": "7-10m", "v": "1m/s", "p": "White Hot", "r": "0-20°C", "n": "Alt. ridotta per ottica 9mm (Max 10m)" }, "IDENTIFY": { "h": "5-5m", "v": "0-1m/s", "p": "Black Hot", "r": "5-25°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "10-20": { "SPOT": { "h": "7-10m", "v": "1m/s", "p": "Ironbow", "r": "15-30°C", "n": "Alt. ridotta per ottica 9mm (Max 10m)" }, "SEARCH": { "h": "7-10m", "v": "1m/s", "p": "White Hot", "r": "10-25°C", "n": "Alt. ridotta per ottica 9mm (Max 10m)" }, "IDENTIFY": { "h": "5-5m", "v": "0-1m/s", "p": "Black Hot", "r": "15-30°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "20-30": { "SEARCH": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" }, "IDENTIFY": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" } },
-        ">30": { "SEARCH": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" }, "IDENTIFY": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" } }
-    },
-    "UCCELLI": {
-        "<0": { "SPOT": { "h": "21-30m", "v": "2-4m/s", "p": "Red Hot", "r": "40-60°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "SEARCH": { "h": "10-15m", "v": "2-3m/s", "p": "White Hot", "r": "40-60°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" }, "IDENTIFY": { "h": "5-5m", "v": "1-2m/s", "p": "Black Hot", "r": "30-50°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "0-10": { "SPOT": { "h": "21-30m", "v": "3-5m/s", "p": "Red Hot", "r": "40-60°C", "n": "Alt. ridotta per ottica 9mm (Max 30m)" }, "SEARCH": { "h": "10-15m", "v": "2-4m/s", "p": "White Hot", "r": "40-60°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" }, "IDENTIFY": { "h": "5-5m", "v": "1-2m/s", "p": "Black Hot", "r": "30-50°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "10-20": { "SPOT": { "h": "10m", "v": "1m/s", "p": "Iso", "r": "35-40°C", "n": "Critico" }, "SEARCH": { "h": "10-15m", "v": "2-3m/s", "p": "White Hot", "r": "30-50°C", "n": "Alt. ridotta per ottica 9mm (Max 15m)" }, "IDENTIFY": { "h": "5-5m", "v": "0-1m/s", "p": "Black Hot", "r": "20-40°C", "n": "Alt. ridotta per ottica 9mm (Max 5m)" } },
-        "20-30": { "SEARCH": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" }, "IDENTIFY": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" } },
-        ">30": { "SEARCH": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" }, "IDENTIFY": { "h": "--", "v": "--", "p": "--", "r": "--", "n": "NON RILEVABILE" } }
+    <div class="sep"></div>
+    <div class="row">
+      <div>
+        <label>GO / NO-GO</label>
+        <select id="go">
+          <option value="">—</option>
+          <option value="GO">🟢 GO - Procedere</option>
+          <option value="NO-GO">🔴 NO-GO - Abortire</option>
+        </select>
+      </div>
+      <div><label>Mitigazione Rischi / Note</label><input id="actions" placeholder="Azioni correttive intraprese..." /></div>
+    </div>
+    
+    <div class="sep"></div>
+    <h2>3) Note Missione</h2>
+    <textarea id="notes" placeholder="Dettagli operativi, contatti utili, note meteo specifiche..."></textarea>
+
+    <div class="sep"></div>
+    <div class="btns">
+      <button class="ok" id="saveDraft">Salva Bozza</button>
+      <button class="danger" id="reset">Nuovo Modulo</button>
+    </div>
+  </section>
+
+  <aside class="card">
+    <h2>Validazione & Autorizzazioni</h2>
+    <div class="status">
+      <div class="badge" id="bDraft">Bozza</div>
+      <div class="badge bad" id="bSigned">Non firmata</div>
+    </div>
+
+    <div class="sep"></div>
+    <h3>Pilota / Operatore</h3>
+    <div class="row">
+      <div><label>Nome Pilota</label><input id="opName" placeholder="Tuo Nome" /></div>
+      <div>
+        <label>Tipo Firma</label>
+        <select id="opSigType" onchange="toggleSig('op')">
+          <option value="draw">Disegnata</option>
+          <option value="typed">Digitata</option>
+        </select>
+      </div>
+    </div>
+    <div class="sigbox" id="opSigDrawBox">
+      <canvas id="opCanvas"></canvas>
+      <button onclick="clearCanvas('opCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
+    </div>
+    <div class="sigbox hidden" id="opSigTypedBox">
+      <input id="opTyped" placeholder="Scrivi firma..." />
+    </div>
+
+    <div class="sep"></div>
+    <div class="pill">
+      <input type="checkbox" id="decl" />
+      <label for="decl" style="margin:0;color:var(--txt);font-size:11px;line-height:1.3">Dichiaro di aver verificato le condizioni e di operare in conformità alle norme (EASA/CH).</label>
+    </div>
+
+    <div class="sep"></div>
+    <div class="pill">
+      <input type="checkbox" id="needManager" onchange="toggleBlock('mgrBlock', this.checked)">
+      <label for="needManager" style="margin:0;color:var(--txt)">Missione soggetta a Responsabile</label>
+    </div>
+    <div id="mgrBlock" class="hidden" style="margin-top:10px">
+      <div class="row">
+        <div><label>Nome Responsabile</label><input id="mgrName" placeholder="Nome Cognome" /></div>
+        <div>
+          <label>Firma</label>
+          <select id="mgrSigType" onchange="toggleSig('mgr')">
+            <option value="draw">Disegnata</option>
+            <option value="typed">Digitata</option>
+          </select>
+        </div>
+      </div>
+      <div class="sigbox" id="mgrSigDrawBox">
+        <canvas id="mgrCanvas"></canvas>
+        <button onclick="clearCanvas('mgrCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
+      </div>
+      <div class="sigbox hidden" id="mgrSigTypedBox">
+        <input id="mgrTyped" placeholder="Firma responsabile..." />
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="pill">
+      <input type="checkbox" id="needOwner" onchange="toggleBlock('ownerBlock', this.checked)">
+      <label for="needOwner" style="margin:0;color:var(--txt)">Autorizzazione Proprietario Terreno</label>
+    </div>
+    <div id="ownerBlock" class="hidden" style="margin-top:10px">
+      <div class="row">
+        <div><label>Nome Proprietario</label><input id="ownerName" placeholder="Nome Cognome" /></div>
+        <div>
+          <label>Firma</label>
+          <select id="ownerSigType" onchange="toggleSig('owner')">
+            <option value="draw">Disegnata</option>
+            <option value="typed">Digitata</option>
+          </select>
+        </div>
+      </div>
+      <div class="sigbox" id="ownerSigDrawBox">
+        <canvas id="ownerCanvas"></canvas>
+        <button onclick="clearCanvas('ownerCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
+      </div>
+      <div class="sigbox hidden" id="ownerSigTypedBox">
+        <input id="ownerTyped" placeholder="Firma proprietario..." />
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="btns">
+      <button class="primary" id="finalize" style="width:100%">✅ Conferma e Firma Tutto</button>
+      <button id="pdf" disabled style="width:100%">📄 Scarica PDF</button>
+    </div>
+
+    <div class="sep"></div>
+    <h2>Archivio Locale</h2>
+    <div class="btns">
+      <button id="export">Export JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <button id="importBtn">Import JSON</button>
+    </div>
+    
+    <div id="history" class="mini" style="margin-top:10px;"></div>
+    
+    <div class="sep"></div>
+    <button id="hardReset" class="danger" style="width:100%; border:1px solid red; color:#ffbaba;">⚠️ SALVA TUTTO & RESETTA (Fix Problemi)</button>
+
+    <button id="exitView" class="danger hidden" style="margin-top:10px;width:100%">Chiudi Visualizzazione</button>
+  </aside>
+</main>
+
+<div id="printWrap">
+  <h3>MAINETTI VISION: FLY - Pre-Flight Check</h3>
+  <div class="grid">
+    <div class="box"><b>ID:</b> <span id="p_id"></span></div>
+    <div class="box"><b>Data:</b> <span id="p_dt"></span></div>
+    <div class="box"><b>Loc:</b> <span id="p_loc"></span></div>
+    <div class="box"><b>UAS:</b> <span id="p_uas"></span></div>
+    <div class="box"><b>Op. ID:</b> <span id="p_opId"></span></div>
+  </div>
+  <div style="margin-top:10px"><b>Esito:</b> <span id="p_go" style="font-weight:bold"></span></div>
+  
+  <h4>Checklist Compliance</h4>
+  <ul id="p_checks"></ul>
+
+  <h4>Note & Mitigazioni</h4>
+  <div class="box" id="p_notes"></div>
+
+  <h4>Firme</h4>
+  
+  <div class="box sig-print">
+    <div><b>Pilota:</b> <span id="p_op_name"></span></div>
+    <div id="p_op_sig"></div>
+    <div style="font-size:9px">Data: <span id="p_sign_dt"></span></div>
+  </div>
+
+  <div id="p_mgr_section" class="box sig-print hidden" style="background:#f0f4ff; border-color:#d0d7de">
+    <div><b>Responsabile Missione:</b> <span id="p_mgr_name"></span></div>
+    <div id="p_mgr_sig"></div>
+  </div>
+
+  <div id="p_owner_section" class="box sig-print hidden" style="background:#f0fff4; border-color:#bceac8">
+    <div><b>Autorizzazione Proprietario:</b> <span id="p_owner_name"></span></div>
+    <div style="font-size:10px;margin-bottom:4px"><i>Autorizzo il sorvolo/decollo nell'area di mia proprietà.</i></div>
+    <div id="p_owner_sig"></div>
+  </div>
+
+  <div style="font-size:9px; color:#999; margin-top:20px; text-align:center">Documento generato da Mainetti Vision App</div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+  // --- PWA SERVICE WORKER REGISTRATION ---
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(()=>console.log("SW fail"));
+    });
+  }
+
+  // --- APP LOGIC ---
+  const STORAGE_KEY = "ms_fly_v2_data";
+  const $ = (id) => document.getElementById(id);
+  const toast = (msg) => {
+    const t = $("toast"); t.textContent = msg; t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 2000);
+  };
+  function nowISO(){ return new Date().toISOString(); }
+  function uid(){ return 'ms_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+  function loadAll(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch{ return []; } }
+  function saveAll(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+
+  // --- CANVAS MANAGER ---
+  const pads = {};
+
+  function initPad(id){
+    const c = $(id);
+    const ctx = c.getContext("2d");
+    let drawing = false;
+
+    // FIX 2.9: Image persistence
+    let storedImage = null;
+
+    function resize(){
+      const r = c.getBoundingClientRect();
+      if(r.width === 0) return; // Hidden elements have 0 width
+      c.width = r.width; c.height = r.height;
+      ctx.lineWidth = 2; ctx.strokeStyle = "#e8edf2";
+      
+      // FIX 2.9: Redraw stored image if exists
+      if(storedImage){
+        ctx.drawImage(storedImage, 0, 0, c.width, c.height);
+      }
     }
+    // Listen for window resize
+    window.addEventListener("resize", resize);
+    
+    function getPos(e){
+      const r = c.getBoundingClientRect();
+      const t = e.touches ? e.touches[0] : e;
+      return { x: t.clientX - r.left, y: t.clientY - r.top };
+    }
+    
+    c.addEventListener("mousedown", e => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); });
+    c.addEventListener("mousemove", e => { if(drawing){ const p=getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }});
+    window.addEventListener("mouseup", () => drawing=false);
+    
+    c.addEventListener("touchstart", e => { e.preventDefault(); drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); }, {passive:false});
+    c.addEventListener("touchmove", e => { if(drawing){ e.preventDefault(); const p=getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }}, {passive:false});
+
+    // Store the resize function so we can call it later
+    pads[id] = { 
+      canvas: c, 
+      ctx: ctx, 
+      resize: resize,
+      setImg: (img) => { storedImage = img; resize(); },
+      clearImg: () => { storedImage = null; },
+      isEmpty: () => {
+        const px = ctx.getImageData(0,0,c.width,c.height).data;
+        return !px.some(x=>x!==0);
+      }
+    };
+    
+    // Initial resize attempt
+    setTimeout(resize, 500);
+  }
+
+  // Init all 3 pads
+  initPad("opCanvas");
+  initPad("mgrCanvas");
+  initPad("ownerCanvas");
+
+  window.clearCanvas = (id) => {
+    const p = pads[id];
+    p.clearImg(); // Fix 2.9: Clear memory
+    p.ctx.clearRect(0,0,p.canvas.width,p.canvas.height);
+  };
+
+  window.drawFromUrl = (id, url) => {
+    if(!url) return;
+    const p = pads[id];
+    p.resize();
+    const img = new Image();
+    img.onload = () => {
+      p.setImg(img); // Fix 2.9: Store memory
+    };
+    img.src = url;
+  };
+
+  // FIX: Force resize when block is shown
+  window.toggleBlock = (id, show) => {
+    const el = $(id);
+    if(el) {
+        el.classList.toggle("hidden", !show);
+        if(show){
+            // Find canvas inside this block and resize it
+            const cvs = el.querySelector("canvas");
+            if(cvs && pads[cvs.id]) {
+                setTimeout(() => pads[cvs.id].resize(), 50); // Small delay for rendering
+            }
+        }
+    }
+  };
+
+  window.toggleSig = (prefix) => {
+    const val = $(prefix+"SigType").value;
+    $(prefix+"SigDrawBox").classList.toggle("hidden", val !== "draw");
+    $(prefix+"SigTypedBox").classList.toggle("hidden", val !== "typed");
+    
+    // FIX: Force resize if switching to draw
+    if(val === "draw"){
+        const cvsId = prefix+"Canvas";
+        if(pads[cvsId]) setTimeout(() => pads[cvsId].resize(), 50);
+    }
+  };
+
+  // --- DATA HANDLING ---
+
+  function getSigData(prefix){
+    const type = $(prefix+"SigType").value;
+    if(type === "draw"){
+      return { type:"draw", val: pads[prefix+"Canvas"].canvas.toDataURL(), empty: pads[prefix+"Canvas"].isEmpty() };
+    } else {
+      const txt = $(prefix+"Typed").value;
+      return { type:"typed", val: txt, empty: !txt };
+    }
+  }
+
+  function getData(){
+    return {
+      mission: {
+        id: $("missionId").value,
+        date: $("date").value,
+        time: $("time").value,
+        loc: $("location").value,
+        uas: $("uas").value,
+        opId: $("opId").value, // NEW 3.0
+        type: $("opType").value
+      },
+      checks: {
+        docs: $("docsOk").checked,
+        eid: $("eidLabel").checked, // NEW 3.0
+        airspace: $("airspaceOk").checked,
+        area: $("areaClear").checked,
+        meteo: $("meteoOk").checked,
+        batt: $("battOk").checked,
+        props: $("propsOk").checked,
+        cam: $("camOk").checked,
+        fw: $("fwOk").checked,
+        gnss: $("gnssOk").checked
+      },
+      outcome: {
+        go: $("go").value,
+        notes: $("notes").value,
+        actions: $("actions").value
+      },
+      extra: {
+        needManager: $("needManager").checked,
+        mgrName: $("mgrName").value,
+        needOwner: $("needOwner").checked,
+        ownerName: $("ownerName").value
+      }
+    };
+  }
+
+  function validate(){
+    const d = getData();
+    if(!d.mission.date || !d.mission.loc || !d.mission.uas) return "Compila Data, Luogo e Drone.";
+    if(!d.outcome.go) return "Definisci esito GO/NO-GO.";
+    if(!$("opName").value) return "Nome pilota mancante.";
+    if(!$("decl").checked) return "Accetta la dichiarazione.";
+    
+    // Check main signature
+    const opSig = getSigData("op");
+    if(opSig.empty) return "Firma pilota mancante.";
+
+    // Check manager if needed
+    if(d.extra.needManager){
+      if(!d.extra.mgrName) return "Nome Responsabile mancante.";
+      if(getSigData("mgr").empty) return "Firma Responsabile mancante.";
+    }
+
+    // Check owner if needed
+    if(d.extra.needOwner){
+      if(!d.extra.ownerName) return "Nome Proprietario mancante.";
+      if(getSigData("owner").empty) return "Firma Proprietario mancante.";
+    }
+
+    return null;
+  }
+
+  // Save / Load
+  let currentId = null; 
+  
+  $("saveDraft").onclick = () => {
+    const all = loadAll();
+    const id = currentId || uid();
+    const rec = { id, status: "draft", timestamp: nowISO(), data: getData(), signatures: {} };
+    const idx = all.findIndex(x=>x.id===id);
+    if(idx>=0) all[idx] = rec; else all.unshift(rec);
+    saveAll(all);
+    currentId = id;
+    renderHistory();
+    toast("Bozza salvata");
+  };
+
+  $("finalize").onclick = () => {
+    const err = validate();
+    if(err){ toast(err); return; }
+    
+    const d = getData();
+    const all = loadAll();
+    const id = currentId || uid();
+    
+    // Collect signatures
+    const sigs = {
+      op: { name: $("opName").value, ...getSigData("op"), date: nowISO() },
+      mgr: d.extra.needManager ? { name: d.extra.mgrName, ...getSigData("mgr") } : null,
+      owner: d.extra.needOwner ? { name: d.extra.ownerName, ...getSigData("owner") } : null
     };
 
-    function updateDashboard() {
-        const target = document.getElementById('targetSelect').value;
-        const temp = document.getElementById('tempSelect').value;
-        const defaultData = { h: "--", v: "--", p: "--", r: "--", n: "Dati non disponibili" };
-        let dataSpot = defaultData, dataSearch = defaultData, dataID = defaultData;
+    const rec = { 
+      id, status: "signed", timestamp: nowISO(), 
+      data: d, signatures: sigs 
+    };
+    
+    const idx = all.findIndex(x=>x.id===id);
+    if(idx>=0) all[idx] = rec; else all.unshift(rec);
+    saveAll(all);
+    currentId = id;
+    
+    $("pdf").disabled = false;
+    $("bSigned").classList.add("ok"); $("bSigned").classList.remove("bad"); $("bSigned").textContent="Firmata";
+    renderHistory();
+    toast("Checklist Firmata e Chiusa!");
+  };
 
-        if (sarData[target] && sarData[target][temp]) {
-            const tData = sarData[target][temp];
-            if(tData.SPOT) dataSpot = tData.SPOT;
-            if(tData.SEARCH) dataSearch = tData.SEARCH;
-            if(tData.IDENTIFY) dataID = tData.IDENTIFY;
+  // --- SAFE WIPE / AUTO BACKUP ---
+  $("hardReset").onclick = () => {
+    if(!confirm("⚠️ ATTENZIONE: Questo cancellerà tutti i dati dall'APP per risolvere eventuali problemi.\n\nVerrà scaricato un backup automatico prima di procedere. Confermi?")) return;
+
+    const all = loadAll();
+    if(all.length > 0){
+        const blob = new Blob([JSON.stringify(all, null, 2)], {type : 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `AUTO_BACKUP_MS_FLY_${nowISO().split('T')[0]}.json`;
+        document.body.appendChild(a); 
+        a.click();
+        document.body.removeChild(a);
+        
+        alert("Backup salvato. Procedo con il reset.");
+    }
+
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+
+  // --- DELETE SINGLE ITEM ---
+  window.deleteRec = (id, event) => {
+    event.stopPropagation(); // Stop clicking row
+    if(!confirm("Sei sicuro di voler eliminare questa checklist definitivamente?")) return;
+    
+    const all = loadAll();
+    const newAll = all.filter(x => x.id !== id);
+    saveAll(newAll);
+    renderHistory();
+    toast("Checklist eliminata 🗑️");
+  }
+
+  // --- EXPORT / IMPORT LOGIC ---
+  $("export").onclick = () => {
+    const all = loadAll();
+    if(!all.length){ toast("Nessun dato da esportare"); return; }
+    
+    const blob = new Blob([JSON.stringify(all, null, 2)], {type : 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `backup_ms_fly_${nowISO().split('T')[0]}.json`;
+    a.click();
+    toast("Backup scaricato");
+  };
+
+  $("importBtn").onclick = () => $("importFile").click();
+  
+  $("importFile").onchange = (e) => {
+    const f = e.target.files[0];
+    if(!f) return;
+    
+    const r = new FileReader();
+    r.onload = (ev) => {
+      try {
+        const imp = JSON.parse(ev.target.result);
+        if(!Array.isArray(imp)) throw new Error("Formato errato");
+        
+        const cur = loadAll();
+        imp.forEach(item => {
+          const idx = cur.findIndex(x => x.id === item.id);
+          if(idx === -1){
+            cur.push(item);
+          } else {
+            if (item.timestamp > cur[idx].timestamp) {
+               cur[idx] = item;
+            }
+          }
+        });
+        
+        saveAll(cur);
+        renderHistory();
+        toast("Importazione completata!");
+      } catch(err){
+        console.error(err);
+        toast("Errore nel file JSON");
+      }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  };
+
+  function renderSigHTML(sigObj){
+    if(!sigObj) return "";
+    if(sigObj.type === "draw") return `<img src="${sigObj.val}" style="max-height:50px;border-bottom:1px solid #000"/>`;
+    return `<div style="font-family:serif;font-style:italic;font-size:16px">${sigObj.val}</div>`;
+  }
+
+  // --- PDF GENERATION ---
+  $("pdf").onclick = () => {
+    const all = loadAll();
+    const rec = all.find(x=>x.id===currentId);
+    if(!rec) return;
+
+    // Populate Print Area
+    $("p_id").textContent = rec.id;
+    $("p_dt").textContent = rec.data.mission.date + " " + rec.data.mission.time;
+    $("p_loc").textContent = rec.data.mission.loc;
+    $("p_uas").textContent = rec.data.mission.uas;
+    $("p_opId").textContent = rec.data.mission.opId || "-"; // NEW 3.0
+    $("p_go").textContent = rec.data.outcome.go;
+    $("p_notes").textContent = (rec.data.outcome.actions ? "Azioni: "+rec.data.outcome.actions+". " : "") + rec.data.outcome.notes;
+    
+    const labels = {
+      docs: "Documenti", 
+      eid: "Etichetta UAS", // NEW 3.0
+      airspace: "Spazio Aereo", area: "Area Sicura",
+      meteo: "Meteo", batt: "Batterie", props: "Eliche",
+      cam: "Payload", fw: "Firmware", gnss: "GNSS/RTH"
+    };
+    $("p_checks").innerHTML = Object.keys(rec.data.checks).map(k => 
+      `<li>${labels[k]}: <b>${rec.data.checks[k]?"SI":"NO"}</b></li>`
+    ).join("");
+
+    // Signatures Print
+    $("p_op_name").textContent = rec.signatures.op.name;
+    $("p_sign_dt").textContent = rec.signatures.op.date;
+    $("p_op_sig").innerHTML = renderSigHTML(rec.signatures.op);
+
+    const mgr = rec.signatures.mgr;
+    if(mgr){
+      $("p_mgr_section").classList.remove("hidden");
+      $("p_mgr_name").textContent = mgr.name;
+      $("p_mgr_sig").innerHTML = renderSigHTML(mgr);
+    } else {
+      $("p_mgr_section").classList.add("hidden");
+    }
+
+    const own = rec.signatures.owner;
+    if(own){
+      $("p_owner_section").classList.remove("hidden");
+      $("p_owner_name").textContent = own.name;
+      $("p_owner_sig").innerHTML = renderSigHTML(own);
+    } else {
+      $("p_owner_section").classList.add("hidden");
+    }
+
+    // Gen PDF
+    const el = $("printWrap");
+    html2canvas(el, {scale:2}).then(c => {
+      const img = c.toDataURL("image/png");
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      const w = pdf.internal.pageSize.getWidth();
+      const h = (c.height * w) / c.width;
+      pdf.addImage(img, 'PNG', 0, 0, w, h);
+      pdf.save(`Checklist_${rec.id}.pdf`);
+    });
+  };
+
+  // --- HISTORY & LOADING ---
+
+  function renderHistory(){
+    const all = loadAll();
+    all.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    $("history").innerHTML = all.slice(0,5).map(r => `
+      <div class="hist-item">
+        <div class="hist-info" onclick="loadRec('${r.id}')">
+          <div style="font-weight:bold">${(r.data && r.data.mission && r.data.mission.loc) ? r.data.mission.loc : "N/D"}</div>
+          <div style="font-size:11px;color:#888">${(r.data && r.data.mission) ? r.data.mission.date : "?"} - ${r.status.toUpperCase()}</div>
+        </div>
+        <button class="hist-del" onclick="deleteRec('${r.id}', event)">🗑️</button>
+      </div>
+    `).join("");
+  }
+  
+  window.loadRec = (id) => {
+    try {
+      const r = loadAll().find(x=>x.id===id);
+      if(!r) return;
+      currentId = r.id;
+      
+      const d = r.data || {}; 
+      const m = d.mission || {};
+      $("missionId").value = m.id || "";
+      $("date").value = m.date || "";
+      $("time").value = m.time || "";
+      $("location").value = m.loc || "";
+      $("uas").value = m.uas || "";
+      $("opId").value = m.opId || "CHE-RP-tf2s8sv9yo41"; // Default 3.0
+      $("opType").value = m.type || "";
+      
+      const c = d.checks || {};
+      $("docsOk").checked = !!c.docs;
+      $("eidLabel").checked = !!c.eid; // NEW 3.0
+      $("airspaceOk").checked = !!c.airspace;
+      $("areaClear").checked = !!(c.area || c.areaClear); 
+      $("meteoOk").checked = !!c.meteo;
+      $("battOk").checked = !!c.batt;
+      $("propsOk").checked = !!c.props;
+      $("camOk").checked = !!c.cam;
+      $("fwOk").checked = !!c.fw;
+      $("gnssOk").checked = !!c.gnss;
+
+      const out = d.outcome || {};
+      $("go").value = out.go || "";
+      $("actions").value = out.actions || "";
+      $("notes").value = out.notes || "";
+
+      const ext = d.extra || {};
+      clearCanvas("opCanvas"); clearCanvas("mgrCanvas"); clearCanvas("ownerCanvas");
+
+      $("needManager").checked = !!ext.needManager;
+      toggleBlock("mgrBlock", !!ext.needManager);
+      $("mgrName").value = ext.mgrName || "";
+
+      $("needOwner").checked = !!ext.needOwner;
+      toggleBlock("ownerBlock", !!ext.needOwner);
+      $("ownerName").value = ext.ownerName || "";
+
+      if(r.status === "signed" && r.signatures){
+        const op = r.signatures.op || {};
+        $("opName").value = op.name || "";
+        if(op.type){
+            $("opSigType").value = op.type;
+            toggleSig("op");
+            if(op.type === "draw") drawFromUrl("opCanvas", op.val);
+            else $("opTyped").value = op.val;
         }
 
-        document.getElementById('spot-alt').innerText = dataSpot.h || "--";
-        document.getElementById('spot-vel').innerText = dataSpot.v || "--";
-        document.getElementById('spot-pal').innerText = dataSpot.p || "--";
-        document.getElementById('spot-range').innerText = dataSpot.r || "--";
-        document.getElementById('spot-note').innerText = dataSpot.n || "";
+        if(r.signatures.mgr){
+          const mgr = r.signatures.mgr;
+          $("mgrSigType").value = mgr.type;
+          toggleSig("mgr");
+          if(mgr.type === "draw") drawFromUrl("mgrCanvas", mgr.val);
+          else $("mgrTyped").value = mgr.val;
+        }
 
-        document.getElementById('search-alt').innerText = dataSearch.h || "--";
-        document.getElementById('search-vel').innerText = dataSearch.v || "--";
-        document.getElementById('search-pal').innerText = dataSearch.p || "--";
-        document.getElementById('search-range').innerText = dataSearch.r || "--";
-        document.getElementById('search-note').innerText = dataSearch.n || "";
+        if(r.signatures.owner){
+          const own = r.signatures.owner;
+          $("ownerSigType").value = own.type;
+          toggleSig("owner");
+          if(own.type === "draw") drawFromUrl("ownerCanvas", own.val);
+          else $("ownerTyped").value = own.val;
+        }
 
-        document.getElementById('id-alt').innerText = dataID.h || "--";
-        document.getElementById('id-vel').innerText = dataID.v || "--";
-        document.getElementById('id-pal').innerText = dataID.p || "--";
-        document.getElementById('id-range').innerText = dataID.r || "--";
-        document.getElementById('id-note').innerText = dataID.n || "";
+        $("pdf").disabled = false;
+        $("bSigned").textContent = "Firmata";
+        $("bSigned").classList.add("ok");
+        document.querySelectorAll("input, select, textarea").forEach(i => i.disabled=true);
+        $("exitView").classList.remove("hidden");
 
-        const warningBox = document.getElementById('global-warning');
-        let warningText = "";
-        if (temp === ">30") warningText = "⚠️ CRITICITÀ TERMICA: Il terreno caldo nasconde i target. Volare solo all'alba.";
-        else if (temp === "20-30" && (target === "RODITORI" || target === "UCCELLI")) warningText = "⛔ IMPOSSIBILE: Target troppo piccolo per il delta termico attuale.";
-        
-        if (warningText) { warningBox.style.display = 'block'; warningBox.innerText = warningText; } 
-        else { warningBox.style.display = 'none'; }
+      } else {
+        $("pdf").disabled = true;
+        $("bSigned").textContent = "Non firmata";
+        $("bSigned").classList.remove("ok");
+        document.querySelectorAll("input, select, textarea").forEach(i => i.disabled=false);
+        $("exitView").classList.add("hidden");
+      }
+      toast("Dati caricati!");
+    } catch(e) {
+      console.error(e);
+      toast("Errore (Prova Reset Dati)");
     }
-    updateDashboard();
-    </script>
+  };
+
+  $("exitView").onclick = () => location.reload();
+  $("reset").onclick = () => location.reload();
+
+  (function init(){
+    $("date").value = new Date().toISOString().split("T")[0];
+    renderHistory();
+  })();
+</script>
 </body>
 </html>
