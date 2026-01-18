@@ -3,312 +3,407 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mainetti Vision: FLY</title>
+  <title>Mainetti Vision: RAP</title>
 
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#0b0c10">
 
   <style>
-    :root { --bg:#0b0c10; --card:#111318; --muted:#9aa4b2; --txt:#e8edf2; --acc:#ff6a00; --bad:#ff4f4f; --ok:#3ddc97; }
+    /* STILE RAP: Tema Scuro con accenti VERDE LIME */
+    :root { 
+      --bg:#0b0c10; 
+      --card:#111318; 
+      --muted:#9aa4b2; 
+      --txt:#e8edf2; 
+      --acc:#4ade80; /* VERDE RAP */
+      --bad:#ff4f4f; 
+      --ok:#4ade80; 
+    }
+    
     *{ box-sizing:border-box; }
     body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:linear-gradient(180deg,#0b0c10,#0a0b0f); color:var(--txt); padding-bottom:50px; }
     
-    /* HERO HEADER */
-    header.hero{ padding: 44px 16px 28px; border-bottom: 1px solid #1b1f2a; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: rgba(11,12,16,.85); }
+    /* HERO HEADER RAP */
+    header.hero{ padding: 30px 16px 20px; border-bottom: 1px solid #1b1f2a; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: rgba(11,12,16,.9); }
     .hero-inner{ max-width: 1100px; margin: 0 auto; text-align: center; }
-    .hero-title{ font-size: 44px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #e8edf2; }
-    .hero-line{ width: 520px; max-width: 92%; height: 3px; background: #ff6a00; margin: 14px auto 14px; border-radius: 99px; }
-    .hero-sub{ font-size: 22px; letter-spacing: 2px; text-transform: lowercase; color: #9aa4b2; }
-    @media (max-width: 600px){ .hero-title{ font-size: 30px; } .hero-sub{ font-size: 16px; } }
-
+    
+    .hero-title{ font-size: 32px; letter-spacing: 2px; font-weight: 800; text-transform: uppercase; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .hero-line{ width: 100%; max-width: 400px; height: 3px; background: linear-gradient(90deg, transparent, var(--acc), transparent); margin: 10px auto; border-radius: 99px; }
+    .hero-sub{ font-size: 14px; letter-spacing: 1px; color: #9aa4b2; text-transform:uppercase; font-weight:600;}
+    
     main{ max-width:1100px; margin:0 auto; padding:16px; display:grid; gap:14px; grid-template-columns: 1.15fr .85fr; }
     @media (max-width: 980px){ main{ grid-template-columns:1fr; } }
     
-    .card{ background: rgba(17,19,24,.9); border:1px solid #1b1f2a; border-radius:14px; padding:14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-    .card h2{ margin:0 0 10px 0; font-size:14px; text-transform:uppercase; letter-spacing:1px; color:var(--acc); }
-    .row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .card{ background: rgba(17,19,24,.95); border:1px solid #1b1f2a; border-radius:14px; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .card h2{ margin:0 0 15px 0; font-size:14px; text-transform:uppercase; letter-spacing:1px; color:var(--acc); border-left: 3px solid var(--acc); padding-left: 10px; }
+    
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     @media (max-width: 560px){ .row{ grid-template-columns:1fr; } }
     
-    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
-    input, select, textarea{ width:100%; padding:10px 10px; border-radius:10px; border:1px solid #242a38; background:#0d1017; color:var(--txt); outline:none; }
-    textarea{ min-height: 72px; resize:vertical; }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:500;}
+    input, select, textarea{ width:100%; padding:12px; border-radius:10px; border:1px solid #242a38; background:#0d1017; color:var(--txt); outline:none; font-size:14px; transition:.2s;}
+    input:focus, select:focus, textarea:focus{ border-color:var(--acc); box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.1); }
+    textarea{ min-height: 85px; resize:vertical; font-family:inherit; }
     
-    .pill{ display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid #242a38; border-radius:12px; background:#0d1017; transition: background .2s; }
-    .pill:hover{ background:#141822; }
-    .pill input{ width:auto; transform: scale(1.3); accent-color: #ff6a00; }
-    .pill label{ cursor:pointer; font-size:14px; }
+    /* MATERIALI STYLE */
+    .mat-input-group { display:grid; grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr; gap:8px; align-items:end; background: #0d1017; padding:10px; border-radius:10px; border:1px solid #242a38; }
+    @media (max-width: 500px){ .mat-input-group{ grid-template-columns: 1fr 1fr; } .mat-input-group button{ grid-column: span 2; } }
+    
+    .mat-list-item { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-bottom:1px solid #242a38; background:rgba(255,255,255,0.02); margin-top:5px; border-radius:6px; font-size:13px;}
+    .mat-list-item span { color: var(--acc); font-weight:bold; margin-right:10px; }
+    
+    /* TIME CALCULATION STYLE */
+    .time-box { background:#0d1017; border:1px solid #242a38; padding:12px; border-radius:10px; margin-top:10px; }
+    .time-display { font-size:15px; font-weight:bold; color:var(--ok); text-align:right; margin-top:8px; }
+    .pause-section { margin-top:10px; padding-top:10px; border-top:1px dashed #242a38; }
+    
+    .pill{ display:flex; gap:10px; align-items:center; padding:10px 12px; border:1px solid #242a38; border-radius:12px; background:#0d1017; transition: background .2s; margin-bottom:8px; cursor:pointer;}
+    .pill:hover{ background: #15181e; }
+    .pill input{ width:auto; transform: scale(1.3); accent-color: var(--acc); margin:0; }
+    .pill label{ cursor:pointer; font-size:14px; color:var(--txt); margin:0; flex-grow:1;}
 
-    .sep{ height:1px; background:#1b1f2a; margin:12px 0; }
+    .sep{ height:1px; background:#1b1f2a; margin:16px 0; }
     .btns{ display:flex; flex-wrap:wrap; gap:10px; }
-    button{ border:0; border-radius:12px; padding:10px 16px; cursor:pointer; background: #1a2233; color:var(--txt); border:1px solid #26304a; font-weight:600;}
-    button.primary{ background: linear-gradient(180deg,#ff6a00,#d45800); border-color:#ff6a00; color:#fff; }
+    button{ border:0; border-radius:12px; padding:12px 16px; cursor:pointer; background: #1a2233; color:var(--txt); border:1px solid #26304a; font-weight:600; font-size:14px; transition:.2s;}
+    button:hover{ filter:brightness(1.1); }
+    
+    button.primary{ background: linear-gradient(180deg,var(--acc),#22c55e); border:none; color:#000; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
     button.ok{ background: #14251f; border-color:#1f4b3c; color:#d8fff1; }
     button.danger{ background: #2a1717; border-color:#512121; color:#ffd7d7; }
-    button:disabled{ opacity:.5; cursor:not-allowed; }
-
-    .status{ display:flex; gap:10px; flex-wrap:wrap; }
-    .badge{ font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid #26304a; background:#0d1017; color:var(--muted);}
-    .badge.ok{ border-color:#1f4b3c; color:#bfffe9;}
-    .badge.bad{ border-color:#512121; color:#ffd0d0;}
+    button.add-btn { background: var(--acc); color:#000; font-weight:bold; height:42px;}
+    button:disabled{ opacity:.5; cursor:not-allowed; box-shadow:none; }
+    
+    button.setup { background: #333; border:1px solid #555; font-size:12px; padding:8px 12px; }
 
     .sigbox{ display:grid; gap:10px; margin-top:10px; padding:10px; border:1px solid #242a38; border-radius:10px; background:#14161c; }
     canvas{ width:100%; height:140px; border-radius:12px; border:1px dashed #2a3143; background:#0d1017; touch-action:none;}
     .hidden{ display:none !important; }
 
-    #printWrap{ position: fixed; left: -10000px; top: 0; width: 794px; background: white; color: black; padding: 25px; }
-    #printWrap h3{ margin:0 0 10px 0; border-bottom: 2px solid #ff6a00; padding-bottom:10px; }
-    #printWrap .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; }
-    #printWrap .box{ border:1px solid #ddd; padding:8px; border-radius:4px; background:#f9f9f9; }
-    #printWrap ul{ list-style:none; padding:0; margin:10px 0; display:grid; grid-template-columns:1fr 1fr; gap:5px; }
-    #printWrap li{ border-bottom:1px solid #eee; padding:4px 0; font-size:12px; }
-    #printWrap .sig-print{ margin-top:10px; border:1px solid #eee; padding:5px; }
-
-    #toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0d1017; border:1px solid #ff6a00; padding:10px 20px; border-radius:999px; color:#fff; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:1000;}
-    #toast.show{ opacity:1; }
+    /* PDF STAGING AREA (off-screen but STILL renderable by html2canvas)
+       NOTE: do NOT use display:none or visibility:hidden, otherwise html2canvas captures blank pages.
+       Keep it close (a few thousand px) to avoid edge-case rendering issues on some browsers. */
+    #pdfStaging { position: fixed; left: -2400px; top: 0; width: 1px; height: 1px; overflow: visible; }
     
-    /* HISTORY LIST STYLE */
-    .hist-item{ display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #222; transition:.2s; background: rgba(255,255,255,0.02); margin-bottom:4px; border-radius:8px;}
-    .hist-item:hover{ background: rgba(255,106,0,.05); }
+    /* PDF PAGE CLASS (A4 Size strict) */
+    .print-page {
+        width: 794px; /* A4 Width at 96 DPI */
+        min-height: 1123px; /* A4 Height */
+        background: white;
+        color: #333;
+        padding: 40px;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        position: relative;
+        overflow: hidden; /* Force content inside */
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    /* PRINT STYLES INSIDE PDF */
+    .print-page h1 { color: #111; border-bottom: 3px solid #4ade80; padding-bottom: 10px; font-size: 24px; margin-bottom: 5px; text-transform: uppercase;}
+    .print-page h3 { background: #f0fdf4; padding: 6px 10px; color: #166534; font-size: 14px; border-left: 4px solid #4ade80; margin-top: 25px; font-weight:bold; margin-bottom:10px;}
+    
+    .print-page .p-row { display: flex; margin-bottom: 8px; font-size: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 4px; }
+    .print-page .p-label { width: 140px; font-weight: bold; color: #444; }
+    .print-page .p-val { flex-grow: 1; color: #000; font-family: 'Courier New', monospace; font-weight:600;}
+    
+    .print-page .p-box { border: 1px solid #e5e7eb; background: #fafafa; padding: 12px; font-size: 12px; min-height: 60px; white-space: pre-wrap; margin-top:5px; border-radius: 4px; line-height:1.4;}
+    
+    /* MATERIAL TABLE PDF */
+    .print-page .p-table { width:100%; border-collapse: collapse; margin-top:10px; font-size:12px; }
+    .print-page .p-table th { background: #e8f5e9; border:1px solid #ccc; padding:6px; text-align:left; font-size:11px;}
+    .print-page .p-table td { border:1px solid #eee; padding:6px; color:#333; }
+    .print-page .p-table tr:nth-child(even) { background: #fafafa; }
+
+    .print-page .check-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 5px; }
+    .print-page .check-item { font-size: 12px; display: flex; align-items: center; gap: 6px; }
+    .print-page .check-box { width: 14px; height: 14px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight:bold;}
+    
+    .print-page .sig-area { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 50px; }
+    .print-page .sig-block { border: 1px solid #ccc; padding: 10px; height: 140px; position: relative; background:#fff; }
+    .print-page .sig-block strong { font-size: 11px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 5px; text-transform:uppercase; color:#666; }
+    .print-page .sig-img { max-height: 90px; max-width: 100%; display: block; margin: 0 auto; }
+    
+    .print-page footer { position: absolute; bottom: 20px; left: 40px; right: 40px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
+
+    #toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#111; border:1px solid var(--acc); padding:12px 24px; border-radius:99px; color:#fff; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:1000; font-weight:bold; box-shadow:0 5px 20px rgba(0,0,0,0.5);}
+    #toast.show{ opacity:1; transform:translateX(-50%) translateY(-10px); }
+    
+    .hist-item{ display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #222; transition:.2s; background: rgba(255,255,255,0.02); margin-bottom:6px; border-radius:8px;}
+    .hist-item:hover{ background: rgba(74, 222, 128, .08); }
     .hist-info{ flex-grow:1; padding:12px; cursor:pointer; }
     .hist-del{ padding:12px 16px; cursor:pointer; font-size:16px; background:transparent; border:none; color:#666; transition:.2s; border-left:1px solid #222; border-radius:0 8px 8px 0;}
     .hist-del:hover{ color:#ff4f4f; background: rgba(255, 79, 79, 0.15); }
+    
+    .power { text-align:center; font-size:11px; color:var(--muted); margin-top:20px; opacity:0.6; }
   </style>
 </head>
 
 <body>
 <header class="hero">
   <div class="hero-inner">
-    <div class="hero-title">MAINETTI VISION: FLY</div>
+    <div class="hero-title">MAINETTI VISION: RAP</div>
     <div class="hero-line"></div>
-    <div class="hero-sub">Operational Safety System</div>
+    <div class="hero-sub">Rapporto Intervento & Cantiere</div>
   </div>
 </header>
 
 <main>
-  <section class="card">
-    <h2>1) Dati Missione</h2>
-    <div class="row">
-      <div><label>ID Missione</label><input id="missionId" placeholder="Es: MS-2026-001" /></div>
-      <div><label>Data</label><input id="date" type="date" /></div>
-      <div><label>Ora</label><input id="time" type="time" /></div>
-      <div><label>Località / Area</label><input id="location" placeholder="Es: Cresciano, Ticino" /></div>
-      <div><label>Drone / UAS</label><input id="uas" placeholder="Es: DJI Mavic 3 Cine" /></div>
-      <div><label>N. Operatore (E-ID)</label><input id="opId" value="CHE-RP-tf2s8sv9yo41" placeholder="CHE-RP-..." /></div>
-      <div style="grid-column: span 2">
-        <label>Operazione</label>
-        <select id="opType">
-          <option value="">— Seleziona —</option>
-          <option>Ispezione Tecnica</option>
-          <option>Fotogrammetria / 3D</option>
-          <option>Videografia Cinema</option>
-          <option>Addestramento / Test</option>
-          <option>SAR / Ricerca</option>
-        </select>
-      </div>
+  <section class="card" id="formCard">
+    <h2>1) Dati Cantiere / Cliente</h2>
+    
+    <div style="margin-bottom:12px">
+      <label>Rif. Commessa / Ticket / ID</label>
+      <input id="missionId" placeholder="Es: CANT-2026-B o Ticket #450" />
     </div>
+
+    <div class="row">
+      <div><label>Ragione Sociale / Cliente</label><input id="clientName" placeholder="Es: Rossi S.r.l." /></div>
+      <div><label>Data Intervento</label><input id="date" type="date" /></div>
+    </div>
+
+    <div class="time-box">
+        <div class="row">
+            <div><label>Ora Inizio</label><input type="time" id="startTime" onchange="calcTime()"></div>
+            <div><label>Ora Fine</label><input type="time" id="endTime" onchange="calcTime()"></div>
+        </div>
+        
+        <div style="margin-top:12px; display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="pauseCheck" onchange="togglePause()" style="width:18px; height:18px; accent-color:var(--acc)">
+            <label for="pauseCheck">Interruzione / Pausa Pranzo</label>
+        </div>
+
+        <div id="pauseFields" class="pause-section hidden">
+            <div class="row">
+                <div><label>Inizio Pausa</label><input type="time" id="pauseStart" onchange="calcTime()"></div>
+                <div><label>Fine Pausa</label><input type="time" id="pauseEnd" onchange="calcTime()"></div>
+            </div>
+        </div>
+
+        <div class="time-display" id="totalDuration">Durata: -</div>
+    </div>
+
+    <div style="margin-top:12px"><label>Indirizzo Intervento</label><input id="address" placeholder="Via Roma 1, Milano" /></div>
+    <div style="margin-top:12px"><label>Referente</label><input id="contact" placeholder="Nome cognome referente" /></div>
 
     <div class="sep"></div>
-    <h2>2) Compliance & Sicurezza (EASA/CH)</h2>
-
-    <div class="pill">
-      <input type="checkbox" id="docsOk">
-      <label for="docsOk" style="margin:0;color:var(--txt)"><b>Documenti:</b> Assicurazione RC, Attestato A1/A3 o A2, Manuale</label>
-    </div>
-    <div class="pill">
-      <input type="checkbox" id="eidLabel">
-      <label for="eidLabel" style="margin:0;color:var(--txt)"><b>ID Operatore:</b> Etichetta e-ID presente e visibile sul drone</label>
-    </div>
-    <div class="pill">
-      <input type="checkbox" id="airspaceOk">
-      <label for="airspaceOk" style="margin:0;color:var(--txt)"><b>Spazio Aereo:</b> DABS/NOTAM verificati, Geo-Zone OK</label>
-    </div>
-    <div class="pill">
-      <input type="checkbox" id="areaClear">
-      <label for="areaClear" style="margin:0;color:var(--txt)"><b>Area:</b> Sicura, senza assembramenti, consenso privacy</label>
-    </div>
-    <div class="pill">
-      <input type="checkbox" id="meteoOk">
-      <label for="meteoOk" style="margin:0;color:var(--txt)"><b>Meteo:</b> Vento, Visibilità, KP Index idonei</label>
-    </div>
-
-    <div class="sep"></div>
+    <h2>2) Dettagli Tecnici</h2>
     <div class="row">
-      <div class="pill"><input type="checkbox" id="battOk"> <label for="battOk" style="margin:0;color:var(--txt)">Batterie (Celle OK)</label></div>
-      <div class="pill"><input type="checkbox" id="propsOk"> <label for="propsOk" style="margin:0;color:var(--txt)">Eliche/Struttura integre</label></div>
-      <div class="pill"><input type="checkbox" id="camOk"> <label for="camOk" style="margin:0;color:var(--txt)">Payload/SD/Lenti OK</label></div>
-      <div class="pill"><input type="checkbox" id="fwOk"> <label for="fwOk" style="margin:0;color:var(--txt)">App/Firmware (No Errori)</label></div>
-      <div class="pill"><input type="checkbox" id="gnssOk"> <label for="gnssOk" style="margin:0;color:var(--txt)">Home Point + <b>RTH Height</b> OK</label></div>
-    </div>
-
-    <div class="sep"></div>
-    <div class="row">
+      <div><label>Area / Locale</label><input id="location" placeholder="Es: Locale Caldaia, Uffici..." /></div>
       <div>
-        <label>GO / NO-GO</label>
-        <select id="go">
-          <option value="">—</option>
-          <option value="GO">🟢 GO - Procedere</option>
-          <option value="NO-GO">🔴 NO-GO - Abortire</option>
+        <label>Tipo Intervento</label>
+        <select id="type">
+          <option value="Sopralluogo Tecnico">Sopralluogo Tecnico</option>
+          <option value="Manutenzione Ordinaria">Manutenzione Ordinaria</option>
+          <option value="Ricerca Guasto">Ricerca Guasto</option>
+          <option value="Installazione">Installazione</option>
+          <option value="Rilievo Misure">Rilievo Misure</option>
+          <option value="Altro">Altro</option>
         </select>
       </div>
-      <div><label>Mitigazione Rischi / Note</label><input id="actions" placeholder="Azioni correttive intraprese..." /></div>
     </div>
     
-    <div class="sep"></div>
-    <h2>3) Note Missione</h2>
-    <textarea id="notes" placeholder="Dettagli operativi, contatti utili, note meteo specifiche..."></textarea>
+    <div style="margin-top:12px">
+      <label>Descrizione Attività</label>
+      <textarea id="desc" placeholder="Descrivere le operazioni svolte..."></textarea>
+    </div>
 
     <div class="sep"></div>
-    <div class="btns">
-      <button class="ok" id="saveDraft">Salva Bozza</button>
-      <button class="danger" id="reset">Nuovo Modulo</button>
+    <h2>3) Materiali Utilizzati</h2>
+    <div class="mat-input-group">
+        <div>
+            <label>Q.tà</label>
+            <input type="number" id="matQty" placeholder="0" />
+        </div>
+        <div>
+            <label>Unità</label>
+            <select id="matUnit">
+                <option value="pz">pz</option>
+                <option value="ml">ml</option>
+            </select>
+        </div>
+        <div>
+            <label>Nome Articolo / Materiale</label>
+            <input id="matName" placeholder="Es: Cavo Cat6, Tasselli..." />
+        </div>
+        <button class="add-btn" onclick="addMaterial()">+</button>
+    </div>
+    <div id="materialsList" style="margin-top:10px;"></div>
+
+    <div class="sep"></div>
+    <h2>4) Esito e Output</h2>
+    <div>
+      <label>Esito Intervento</label>
+      <select id="outcome">
+        <option value="Intervento concluso (Verde)">🟢 Intervento concluso / Nessuna anomalia</option>
+        <option value="Completato con note (Giallo)">🟡 Completato con note / Da monitorare</option>
+        <option value="Parziale / Non Risolto (Rosso)">🔴 Parziale / Non Risolto / Sospeso</option>
+      </select>
+    </div>
+    <div style="margin-top:12px">
+      <label>Note Aggiuntive</label>
+      <textarea id="notes" placeholder="Eventuali note..."></textarea>
+    </div>
+
+    <div style="margin-top:15px">
+      <label style="margin-bottom:8px">Checklist Output</label>
+      <div class="row">
+        <div class="pill"><input type="checkbox" id="del_photo"> <label for="del_photo">Foto</label></div>
+        <div class="pill"><input type="checkbox" id="del_tech"> <label for="del_tech">Schede T.</label></div>
+        <div class="pill"><input type="checkbox" id="del_parts"> <label for="del_parts">Ricambi</label></div>
+        <div class="pill"><input type="checkbox" id="del_other"> <label for="del_other">Altro</label></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="btns" id="editBtns">
+      <button class="ok" id="saveDraft">💾 Salva Bozza</button>
+      <button class="danger" id="reset">❌ Pulisci</button>
     </div>
   </section>
 
   <aside class="card">
-    <h2>Validazione & Autorizzazioni</h2>
-    <div class="status">
-      <div class="badge" id="bDraft">Bozza</div>
-      <div class="badge bad" id="bSigned">Non firmata</div>
-    </div>
-
-    <div class="sep"></div>
-    <h3>Pilota / Operatore</h3>
+    <h2>Firme Digitali</h2>
+    
+    <h3>Tecnico Mainetti Solution</h3>
     <div class="row">
-      <div><label>Nome Pilota</label><input id="opName" placeholder="Tuo Nome" /></div>
+      <div><label>Nome Tecnico</label><input id="opName" value="Mainetti Solution" /></div>
       <div>
-        <label>Tipo Firma</label>
+        <label>Modalità</label>
         <select id="opSigType" onchange="toggleSig('op')">
-          <option value="draw">Disegnata</option>
-          <option value="typed">Digitata</option>
+          <option value="draw">Disegna</option>
+          <option value="typed">Digita</option>
         </select>
       </div>
     </div>
     <div class="sigbox" id="opSigDrawBox">
       <canvas id="opCanvas"></canvas>
-      <button onclick="clearCanvas('opCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
+      <button onclick="clearCanvas('opCanvas')" style="padding:4px 10px; font-size:11px;">Cancella</button>
     </div>
     <div class="sigbox hidden" id="opSigTypedBox">
       <input id="opTyped" placeholder="Scrivi firma..." />
     </div>
 
     <div class="sep"></div>
-    <div class="pill">
-      <input type="checkbox" id="decl" />
-      <label for="decl" style="margin:0;color:var(--txt);font-size:11px;line-height:1.3">Dichiaro di aver verificato le condizioni e di operare in conformità alle norme (EASA/CH).</label>
+    <h3>Cliente / Resp. Cantiere</h3>
+    <div class="row">
+      <div><label>Nome Referente</label><input id="clName" placeholder="Chi firma?" /></div>
+      <div>
+        <label>Modalità</label>
+        <select id="clSigType" onchange="toggleSig('cl')">
+          <option value="draw">Disegna</option>
+          <option value="typed">Digita</option>
+        </select>
+      </div>
     </div>
-
+    <div class="sigbox" id="clSigDrawBox">
+      <canvas id="clCanvas"></canvas>
+      <button onclick="clearCanvas('clCanvas')" style="padding:4px 10px; font-size:11px;">Cancella</button>
+    </div>
+    <div class="sigbox hidden" id="clSigTypedBox">
+      <input id="clTyped" placeholder="Firma cliente..." />
+    </div>
+    
     <div class="sep"></div>
-    <div class="pill">
-      <input type="checkbox" id="needManager" onchange="toggleBlock('mgrBlock', this.checked)">
-      <label for="needManager" style="margin:0;color:var(--txt)">Missione soggetta a Responsabile</label>
-    </div>
-    <div id="mgrBlock" class="hidden" style="margin-top:10px">
-      <div class="row">
-        <div><label>Nome Responsabile</label><input id="mgrName" placeholder="Nome Cognome" /></div>
-        <div>
-          <label>Firma</label>
-          <select id="mgrSigType" onchange="toggleSig('mgr')">
-            <option value="draw">Disegnata</option>
-            <option value="typed">Digitata</option>
-          </select>
-        </div>
-      </div>
-      <div class="sigbox" id="mgrSigDrawBox">
-        <canvas id="mgrCanvas"></canvas>
-        <button onclick="clearCanvas('mgrCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
-      </div>
-      <div class="sigbox hidden" id="mgrSigTypedBox">
-        <input id="mgrTyped" placeholder="Firma responsabile..." />
-      </div>
-    </div>
-
-    <div class="sep"></div>
-    <div class="pill">
-      <input type="checkbox" id="needOwner" onchange="toggleBlock('ownerBlock', this.checked)">
-      <label for="needOwner" style="margin:0;color:var(--txt)">Autorizzazione Proprietario Terreno</label>
-    </div>
-    <div id="ownerBlock" class="hidden" style="margin-top:10px">
-      <div class="row">
-        <div><label>Nome Proprietario</label><input id="ownerName" placeholder="Nome Cognome" /></div>
-        <div>
-          <label>Firma</label>
-          <select id="ownerSigType" onchange="toggleSig('owner')">
-            <option value="draw">Disegnata</option>
-            <option value="typed">Digitata</option>
-          </select>
-        </div>
-      </div>
-      <div class="sigbox" id="ownerSigDrawBox">
-        <canvas id="ownerCanvas"></canvas>
-        <button onclick="clearCanvas('ownerCanvas')" style="padding:4px 10px; font-size:11px;">Pulisci</button>
-      </div>
-      <div class="sigbox hidden" id="ownerSigTypedBox">
-        <input id="ownerTyped" placeholder="Firma proprietario..." />
-      </div>
+    <div class="pill" style="cursor:default">
+      <input type="checkbox" id="privacy" checked disabled />
+      <label for="privacy" style="font-size:11px; color:#888; cursor:default">Il cliente dichiara di accettare le ore lavorate e i materiali indicati.</label>
     </div>
 
     <div class="sep"></div>
     <div class="btns">
-      <button class="primary" id="finalize" style="width:100%">✅ Conferma e Firma Tutto</button>
-      <button id="pdf" disabled style="width:100%">📄 Scarica PDF</button>
+      <button class="primary" id="finalize" style="width:100%; padding:15px;">✅ CONFERMA E CREA PDF</button>
+      <button id="pdfBtn" disabled style="width:100%">📄 Scarica PDF Firmato</button>
     </div>
 
     <div class="sep"></div>
-    <h2>Archivio Locale</h2>
+    <h2>Impostazioni & Archivio</h2>
+    
+    <div style="background:#14161c; padding:10px; border-radius:10px; border:1px solid #333; margin-bottom:15px;">
+        <label style="color:#fff; margin-bottom:5px;">Logo Aziendale per PDF</label>
+        <div style="font-size:11px; color:#888; margin-bottom:8px;">Carica qui il logo per evitare errori di stampa.</div>
+        <button class="setup" id="uploadLogoBtn" style="width:100%">📂 Carica/Aggiorna Logo</button>
+        <input type="file" id="logoInput" accept="image/*" style="display:none">
+        <div id="logoStatus" style="font-size:11px; margin-top:5px; color:var(--acc);"></div>
+    </div>
+
     <div class="btns">
-      <button id="export">Export JSON</button>
+      <button id="export">📥 Export JSON</button>
       <input id="importFile" type="file" accept="application/json" style="display:none" />
-      <button id="importBtn">Import JSON</button>
+      <button id="importBtn">📤 Import JSON</button>
     </div>
-    
-    <div id="history" class="mini" style="margin-top:10px;"></div>
-    
-    <div class="sep"></div>
-    <button id="hardReset" class="danger" style="width:100%; border:1px solid red; color:#ffbaba;">⚠️ SALVA TUTTO & RESETTA (Fix Problemi)</button>
 
-    <button id="exitView" class="danger hidden" style="margin-top:10px;width:100%">Chiudi Visualizzazione</button>
+    <div id="history" class="mini" style="margin-top:10px"></div>
+    
+    <div style="margin-top:20px; display:grid; gap:10px;">
+        <button id="exitView" class="danger hidden" style="width:100%">Chiudi Visualizzazione</button>
+        <button id="hardReset" class="danger" style="width:100%; border:1px solid red; color:#ffbaba; font-size:11px; background:rgba(42,23,23,0.5)">⚠️ RESET APP (Fix Problemi)</button>
+    </div>
+
+    <div class="power">Powered by <b>Mainetti Solution</b></div>
   </aside>
 </main>
 
-<div id="printWrap">
-  <h3>MAINETTI VISION: FLY - Pre-Flight Check</h3>
-  <div class="grid">
-    <div class="box"><b>ID:</b> <span id="p_id"></span></div>
-    <div class="box"><b>Data:</b> <span id="p_dt"></span></div>
-    <div class="box"><b>Loc:</b> <span id="p_loc"></span></div>
-    <div class="box"><b>UAS:</b> <span id="p_uas"></span></div>
-    <div class="box"><b>Op. ID:</b> <span id="p_opId"></span></div>
-  </div>
-  <div style="margin-top:10px"><b>Esito:</b> <span id="p_go" style="font-weight:bold"></span></div>
-  
-  <h4>Checklist Compliance</h4>
-  <ul id="p_checks"></ul>
+<div id="pdfStaging">
+    <div id="printSource" style="display:none">
+        <div id="section_header" class="pdf-block">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #4ade80; padding-bottom:10px; margin-bottom:20px;">
+                <div>
+                    <h1 style="border:none; margin:0; padding:0;">RAPPORTO INTERVENTO</h1>
+                    <div style="font-size:12px; color:#666; margin-top:5px;">MAINETTI VISION: RAP - Technical Service</div>
+                </div>
+                <img id="pdfLogo" style="height:50px; display:none;" />
+            </div>
+        </div>
 
-  <h4>Note & Mitigazioni</h4>
-  <div class="box" id="p_notes"></div>
+        <div id="section_data" class="pdf-block">
+             <h3>1. DATI COMMESSA E CLIENTE</h3>
+             <div class="p-row"><div class="p-label">Commessa/Ticket:</div><div class="p-val" id="p_mid"></div></div>
+             <div class="p-row"><div class="p-label">Cliente:</div><div class="p-val" id="p_client"></div></div>
+             <div class="p-row"><div class="p-label">Indirizzo:</div><div class="p-val" id="p_addr"></div></div>
+             <div class="p-row"><div class="p-label">Referente:</div><div class="p-val" id="p_contact"></div></div>
+             <div class="p-row"><div class="p-label">Data:</div><div class="p-val" id="p_date"></div></div>
+             <div class="p-row"><div class="p-label">Orario:</div><div class="p-val" id="p_time_row"></div></div>
+             <div class="p-row"><div class="p-label">Oggetto/Area:</div><div class="p-val" id="p_loc"></div></div>
+             <div class="p-row"><div class="p-label">Tipo Attività:</div><div class="p-val" id="p_type"></div></div>
+        </div>
 
-  <h4>Firme</h4>
-  
-  <div class="box sig-print">
-    <div><b>Pilota:</b> <span id="p_op_name"></span></div>
-    <div id="p_op_sig"></div>
-    <div style="font-size:9px">Data: <span id="p_sign_dt"></span></div>
-  </div>
+        <div id="section_desc" class="pdf-block">
+             <h3>2. DESCRIZIONE TECNICA</h3>
+             <div class="p-box" id="p_desc"></div>
+        </div>
 
-  <div id="p_mgr_section" class="box sig-print hidden" style="background:#f0f4ff; border-color:#d0d7de">
-    <div><b>Responsabile Missione:</b> <span id="p_mgr_name"></span></div>
-    <div id="p_mgr_sig"></div>
-  </div>
+        <div id="section_materials" class="pdf-block hidden">
+             <h3>3. MATERIALI E CONSUMO</h3>
+             <table class="p-table" id="p_mat_table">
+                 <thead><tr><th style="width:15%">Q.tà</th><th style="width:15%">Unità</th><th>Articolo / Materiale</th></tr></thead>
+                 <tbody id="p_materials_list"></tbody>
+             </table>
+        </div>
 
-  <div id="p_owner_section" class="box sig-print hidden" style="background:#f0fff4; border-color:#bceac8">
-    <div><b>Autorizzazione Proprietario:</b> <span id="p_owner_name"></span></div>
-    <div style="font-size:10px;margin-bottom:4px"><i>Autorizzo il sorvolo/decollo nell'area di mia proprietà.</i></div>
-    <div id="p_owner_sig"></div>
-  </div>
-
-  <div style="font-size:9px; color:#999; margin-top:20px; text-align:center">Documento generato da Mainetti Vision App</div>
+        <div id="section_outcome" class="pdf-block">
+             <h3>4. ESITO E NOTE</h3>
+             <div class="p-row"><div class="p-label">Esito:</div><div class="p-val" id="p_outcome" style="font-weight:bold"></div></div>
+             <div class="p-box" id="p_notes"></div>
+             <h3>5. OUTPUT</h3>
+             <div class="check-grid" id="p_deliverables"></div>
+        </div>
+        
+        <div id="section_sigs" class="pdf-block">
+            <div class="sig-area">
+                <div class="sig-block">
+                  <strong>Tecnico Mainetti Solution</strong>
+                  <div id="p_op_sig_img"></div>
+                  <div style="font-size:10px; margin-top:5px; text-align:center" id="p_op_name"></div>
+                </div>
+                <div class="sig-block">
+                  <strong>Cliente / Resp. Cantiere</strong>
+                  <div id="p_cl_sig_img"></div>
+                  <div style="font-size:10px; margin-top:5px; text-align:center" id="p_cl_name"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="toast"></div>
@@ -317,514 +412,540 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script>
-  // --- PWA SERVICE WORKER REGISTRATION ---
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(()=>console.log("SW fail"));
-    });
+    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
   }
 
-  // --- APP LOGIC ---
-  const STORAGE_KEY = "ms_fly_v2_data";
+  const STORAGE_KEY = "ms_rap_v1_data";
+  const LOGO_KEY = "ms_rap_logo_base64";
+  
   const $ = (id) => document.getElementById(id);
   const toast = (msg) => {
     const t = $("toast"); t.textContent = msg; t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"), 2000);
+    setTimeout(()=>t.classList.remove("show"), 3000);
   };
   function nowISO(){ return new Date().toISOString(); }
-  function uid(){ return 'ms_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
+  function uid(){ return 'rap_' + Date.now().toString(36); }
   function loadAll(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch{ return []; } }
   function saveAll(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+  function fmtDate(iso){ if(!iso || iso.indexOf("-")===-1) return iso; const p=iso.split("-"); return `${p[2]}.${p[1]}.${p[0]}`; }
 
-  // --- CANVAS MANAGER ---
+  // --- LOGO LOGIC ---
+  $("uploadLogoBtn").onclick = () => $("logoInput").click();
+  $("logoInput").onchange = (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+          localStorage.setItem(LOGO_KEY, evt.target.result);
+          toast("Logo Caricato!");
+          checkLogo();
+      };
+      reader.readAsDataURL(file);
+  };
+
+  function checkLogo() {
+      const savedLogo = localStorage.getItem(LOGO_KEY);
+      if(savedLogo) {
+          $("logoStatus").textContent = "✅ Logo Attivo";
+          $("pdfLogo").src = savedLogo;
+          $("pdfLogo").style.display = "block";
+      } else {
+          $("logoStatus").textContent = "⚠️ Nessun logo";
+          $("pdfLogo").style.display = "none";
+      }
+  }
+
+  // --- MATERIAL LOGIC ---
+  let materials = [];
+  window.addMaterial = () => {
+      const q = $("matQty").value;
+      const u = $("matUnit").value;
+      const n = $("matName").value;
+      if(!q || !n) return toast("Dati mancanti!");
+      materials.push({ q, u, n });
+      $("matQty").value = ""; $("matName").value = "";
+      renderMaterials();
+  }
+  window.removeMaterial = (index) => { materials.splice(index, 1); renderMaterials(); }
+  function renderMaterials() {
+      const el = $("materialsList");
+      el.innerHTML = materials.map((m,i) => `
+        <div class="mat-list-item">
+            <div><span>${m.q} ${m.u}</span> ${m.n}</div>
+            <button style="padding:4px 8px;font-size:12px;background:#2a1717;color:#ffbaba" onclick="removeMaterial(${i})">X</button>
+        </div>
+      `).join("");
+  }
+
+  // --- TIME LOGIC ---
+  window.togglePause = () => {
+      $("pauseFields").classList.toggle("hidden", !$("pauseCheck").checked);
+      calcTime();
+  }
+  window.calcTime = () => {
+      const start = $("startTime").value;
+      const end = $("endTime").value;
+      const display = $("totalDuration");
+      if(!start || !end) { display.textContent = "Durata: -"; return; }
+      const d1 = new Date(`2000-01-01T${start}`), d2 = new Date(`2000-01-01T${end}`);
+      let diff = d2 - d1; 
+      if($("pauseCheck").checked){
+          const pStart = $("pauseStart").value, pEnd = $("pauseEnd").value;
+          if(pStart && pEnd){
+              const pd1 = new Date(`2000-01-01T${pStart}`), pd2 = new Date(`2000-01-01T${pEnd}`);
+              if(pd2 > pd1) diff -= (pd2 - pd1);
+          }
+      }
+      if(diff < 0) { display.textContent = "Errore orari"; return; }
+      const h = Math.floor(diff / 36e5), m = Math.round((diff % 36e5) / 6e4);
+      display.textContent = `Totale Netto: ${h}h ${m}m`;
+  };
+
+  // --- CANVAS SIGNATURE ---
   const pads = {};
-
   function initPad(id){
-    const c = $(id);
-    const ctx = c.getContext("2d");
-    let drawing = false;
-
-    // FIX 2.9: Image persistence
-    let storedImage = null;
-
+    const c = $(id), ctx = c.getContext("2d");
+    let drawing = false, storedImage = null;
     function resize(){
       const r = c.getBoundingClientRect();
-      if(r.width === 0) return; // Hidden elements have 0 width
+      if(r.width===0) return;
       c.width = r.width; c.height = r.height;
       ctx.lineWidth = 2; ctx.strokeStyle = "#e8edf2";
-      
-      // FIX 2.9: Redraw stored image if exists
-      if(storedImage){
-        ctx.drawImage(storedImage, 0, 0, c.width, c.height);
-      }
+      if(storedImage) ctx.drawImage(storedImage, 0, 0, c.width, c.height);
     }
-    // Listen for window resize
     window.addEventListener("resize", resize);
-    
-    function getPos(e){
-      const r = c.getBoundingClientRect();
-      const t = e.touches ? e.touches[0] : e;
-      return { x: t.clientX - r.left, y: t.clientY - r.top };
-    }
-    
+    function getPos(e){ const r=c.getBoundingClientRect(), t=e.touches?e.touches[0]:e; return { x: t.clientX - r.left, y: t.clientY - r.top }; }
     c.addEventListener("mousedown", e => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); });
     c.addEventListener("mousemove", e => { if(drawing){ const p=getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }});
     window.addEventListener("mouseup", () => drawing=false);
-    
     c.addEventListener("touchstart", e => { e.preventDefault(); drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); }, {passive:false});
     c.addEventListener("touchmove", e => { if(drawing){ e.preventDefault(); const p=getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }}, {passive:false});
-
-    // Store the resize function so we can call it later
-    pads[id] = { 
-      canvas: c, 
-      ctx: ctx, 
-      resize: resize,
-      setImg: (img) => { storedImage = img; resize(); },
-      clearImg: () => { storedImage = null; },
-      isEmpty: () => {
-        const px = ctx.getImageData(0,0,c.width,c.height).data;
-        return !px.some(x=>x!==0);
-      }
-    };
-    
-    // Initial resize attempt
+    pads[id] = { canvas:c, ctx:ctx, resize:resize, setImg:(img)=>{storedImage=img; resize();}, clearImg:()=>{storedImage=null;}, isEmpty:()=>!ctx.getImageData(0,0,c.width,c.height).data.some(x=>x!==0) };
     setTimeout(resize, 500);
   }
+  initPad("opCanvas"); initPad("clCanvas");
 
-  // Init all 3 pads
-  initPad("opCanvas");
-  initPad("mgrCanvas");
-  initPad("ownerCanvas");
-
-  window.clearCanvas = (id) => {
-    const p = pads[id];
-    p.clearImg(); // Fix 2.9: Clear memory
-    p.ctx.clearRect(0,0,p.canvas.width,p.canvas.height);
-  };
-
-  window.drawFromUrl = (id, url) => {
-    if(!url) return;
-    const p = pads[id];
-    p.resize();
-    const img = new Image();
-    img.onload = () => {
-      p.setImg(img); // Fix 2.9: Store memory
-    };
-    img.src = url;
-  };
-
-  // FIX: Force resize when block is shown
-  window.toggleBlock = (id, show) => {
-    const el = $(id);
-    if(el) {
-        el.classList.toggle("hidden", !show);
-        if(show){
-            // Find canvas inside this block and resize it
-            const cvs = el.querySelector("canvas");
-            if(cvs && pads[cvs.id]) {
-                setTimeout(() => pads[cvs.id].resize(), 50); // Small delay for rendering
-            }
-        }
-    }
-  };
-
+  window.clearCanvas = (id) => { pads[id].clearImg(); pads[id].ctx.clearRect(0,0,pads[id].canvas.width,pads[id].canvas.height); };
+  window.drawFromUrl = (id, url) => { if(!url)return; const img=new Image(); img.onload=()=>pads[id].setImg(img); img.src=url; };
   window.toggleSig = (prefix) => {
     const val = $(prefix+"SigType").value;
     $(prefix+"SigDrawBox").classList.toggle("hidden", val !== "draw");
     $(prefix+"SigTypedBox").classList.toggle("hidden", val !== "typed");
-    
-    // FIX: Force resize if switching to draw
-    if(val === "draw"){
-        const cvsId = prefix+"Canvas";
-        if(pads[cvsId]) setTimeout(() => pads[cvsId].resize(), 50);
-    }
+    if(val === "draw" && pads[prefix+"Canvas"]) setTimeout(() => pads[prefix+"Canvas"].resize(), 50);
   };
-
-  // --- DATA HANDLING ---
-
   function getSigData(prefix){
     const type = $(prefix+"SigType").value;
-    if(type === "draw"){
-      return { type:"draw", val: pads[prefix+"Canvas"].canvas.toDataURL(), empty: pads[prefix+"Canvas"].isEmpty() };
-    } else {
-      const txt = $(prefix+"Typed").value;
-      return { type:"typed", val: txt, empty: !txt };
-    }
+    if(type === "draw") return { type:"draw", val: pads[prefix+"Canvas"].canvas.toDataURL(), empty: pads[prefix+"Canvas"].isEmpty() };
+    return { type:"typed", val: $(prefix+"Typed").value, empty: !$(prefix+"Typed").value };
   }
 
+  // --- DATA MANGEMENT ---
+  let currentId = null;
+  function toggleForm(enable){
+    document.querySelectorAll("input, select, textarea, button.add-btn, button.setup").forEach(el => {
+      if(el.id !== "importFile") el.disabled = !enable;
+    });
+    $("editBtns").classList.toggle("hidden", !enable);
+    $("finalize").classList.toggle("hidden", !enable);
+    document.querySelectorAll(".mat-list-item button").forEach(b => b.disabled = !enable);
+  }
   function getData(){
     return {
-      mission: {
-        id: $("missionId").value,
-        date: $("date").value,
-        time: $("time").value,
-        loc: $("location").value,
-        uas: $("uas").value,
-        opId: $("opId").value, // NEW 3.0
-        type: $("opType").value
+      client: { name: $("clientName").value, addr: $("address").value, contact: $("contact").value },
+      job: { 
+          missionId: $("missionId").value, date: $("date").value, 
+          startTime: $("startTime").value, endTime: $("endTime").value, 
+          hasPause: $("pauseCheck").checked, pauseStart: $("pauseStart").value, pauseEnd: $("pauseEnd").value,
+          loc: $("location").value, type: $("type").value, desc: $("desc").value 
       },
-      checks: {
-        docs: $("docsOk").checked,
-        eid: $("eidLabel").checked, // NEW 3.0
-        airspace: $("airspaceOk").checked,
-        area: $("areaClear").checked,
-        meteo: $("meteoOk").checked,
-        batt: $("battOk").checked,
-        props: $("propsOk").checked,
-        cam: $("camOk").checked,
-        fw: $("fwOk").checked,
-        gnss: $("gnssOk").checked
-      },
-      outcome: {
-        go: $("go").value,
-        notes: $("notes").value,
-        actions: $("actions").value
-      },
-      extra: {
-        needManager: $("needManager").checked,
-        mgrName: $("mgrName").value,
-        needOwner: $("needOwner").checked,
-        ownerName: $("ownerName").value
+      materials: materials, 
+      result: { 
+        outcome: $("outcome").value, notes: $("notes").value, 
+        deliverables: { photo: $("del_photo").checked, tech: $("del_tech").checked, parts: $("del_parts").checked, other: $("del_other").checked } 
       }
     };
   }
-
-  function validate(){
+  $("saveDraft").onclick = () => {
+    const rec = { id: currentId||uid(), status: "draft", timestamp: nowISO(), data: getData(), sigs: {} };
+    saveRec(rec); toast("Bozza salvata!");
+  };
+  $("finalize").onclick = () => {
     const d = getData();
-    if(!d.mission.date || !d.mission.loc || !d.mission.uas) return "Compila Data, Luogo e Drone.";
-    if(!d.outcome.go) return "Definisci esito GO/NO-GO.";
-    if(!$("opName").value) return "Nome pilota mancante.";
-    if(!$("decl").checked) return "Accetta la dichiarazione.";
-    
-    // Check main signature
-    const opSig = getSigData("op");
-    if(opSig.empty) return "Firma pilota mancante.";
+    if(!d.client.name || !d.job.date) return toast("Dati obbligatori mancanti!");
+    const op=getSigData("op"), cl=getSigData("cl");
+    if(op.empty) return toast("Manca firma Tecnico");
+    const rec = { id: currentId||uid(), status: "signed", timestamp: nowISO(), data: d, sigs: { op: {name:$("opName").value, ...op}, cl: {name:$("clName").value, ...cl} } };
+    saveRec(rec); toast("Salvato!"); loadRec(rec.id);
+  };
+  function saveRec(rec){
+      const all = loadAll(); const idx = all.findIndex(x=>x.id===rec.id);
+      if(idx>=0) all[idx]=rec; else all.unshift(rec);
+      saveAll(all); currentId=rec.id; renderHistory();
+  }
+  $("reset").onclick = () => location.reload();
+  $("exitView").onclick = () => location.reload();
+  $("hardReset").onclick = () => { if(confirm("Reset totale?")) { localStorage.clear(); location.reload(); }};
 
-    // Check manager if needed
-    if(d.extra.needManager){
-      if(!d.extra.mgrName) return "Nome Responsabile mancante.";
-      if(getSigData("mgr").empty) return "Firma Responsabile mancante.";
-    }
+  // --- PDF ENGINE (PAGINATION, NO CUT CHAPTERS) ---
+  // Problemi tipici risolti qui:
+  // - Se html2canvas/jsPDF non sono disponibili (offline/CDN non caricato), blocchiamo con un messaggio chiaro.
+  // - Evitiamo che blocchi (soprattutto firme) vengano spezzati tra due pagine.
+  // - Se un testo lungo supera la pagina, lo splittiamo in piu' pagine (descrizione e note).
 
-    // Check owner if needed
-    if(d.extra.needOwner){
-      if(!d.extra.ownerName) return "Nome Proprietario mancante.";
-      if(getSigData("owner").empty) return "Firma Proprietario mancante.";
-    }
-
+  function getJsPDFClass(){
+    if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+    if(window.jsPDF) return window.jsPDF;
     return null;
   }
 
-  // Save / Load
-  let currentId = null; 
-  
-  $("saveDraft").onclick = () => {
-    const all = loadAll();
-    const id = currentId || uid();
-    const rec = { id, status: "draft", timestamp: nowISO(), data: getData(), signatures: {} };
-    const idx = all.findIndex(x=>x.id===id);
-    if(idx>=0) all[idx] = rec; else all.unshift(rec);
-    saveAll(all);
-    currentId = id;
-    renderHistory();
-    toast("Bozza salvata");
-  };
-
-  $("finalize").onclick = () => {
-    const err = validate();
-    if(err){ toast(err); return; }
-    
-    const d = getData();
-    const all = loadAll();
-    const id = currentId || uid();
-    
-    // Collect signatures
-    const sigs = {
-      op: { name: $("opName").value, ...getSigData("op"), date: nowISO() },
-      mgr: d.extra.needManager ? { name: d.extra.mgrName, ...getSigData("mgr") } : null,
-      owner: d.extra.needOwner ? { name: d.extra.ownerName, ...getSigData("owner") } : null
-    };
-
-    const rec = { 
-      id, status: "signed", timestamp: nowISO(), 
-      data: d, signatures: sigs 
-    };
-    
-    const idx = all.findIndex(x=>x.id===id);
-    if(idx>=0) all[idx] = rec; else all.unshift(rec);
-    saveAll(all);
-    currentId = id;
-    
-    $("pdf").disabled = false;
-    $("bSigned").classList.add("ok"); $("bSigned").classList.remove("bad"); $("bSigned").textContent="Firmata";
-    renderHistory();
-    toast("Checklist Firmata e Chiusa!");
-  };
-
-  // --- SAFE WIPE / AUTO BACKUP ---
-  $("hardReset").onclick = () => {
-    if(!confirm("⚠️ ATTENZIONE: Questo cancellerà tutti i dati dall'APP per risolvere eventuali problemi.\n\nVerrà scaricato un backup automatico prima di procedere. Confermi?")) return;
-
-    const all = loadAll();
-    if(all.length > 0){
-        const blob = new Blob([JSON.stringify(all, null, 2)], {type : 'application/json'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `AUTO_BACKUP_MS_FLY_${nowISO().split('T')[0]}.json`;
-        document.body.appendChild(a); 
-        a.click();
-        document.body.removeChild(a);
-        
-        alert("Backup salvato. Procedo con il reset.");
-    }
-
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+  function renderSigHTML(s){
+    if(!s || s.empty) return "";
+    if(s.type === "draw") return `<img src="${s.val}" class="sig-img" />`;
+    return `<div style="font-family:serif; font-style:italic; font-size:18px; text-align:center; padding:10px">${escapeHtml(s.val)}</div>`;
   }
 
-  // --- DELETE SINGLE ITEM ---
-  window.deleteRec = (id, event) => {
-    event.stopPropagation(); // Stop clicking row
-    if(!confirm("Sei sicuro di voler eliminare questa checklist definitivamente?")) return;
-    
-    const all = loadAll();
-    const newAll = all.filter(x => x.id !== id);
-    saveAll(newAll);
-    renderHistory();
-    toast("Checklist eliminata 🗑️");
+  function escapeHtml(str){
+    return (str||"").replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[m]));
   }
 
-  // --- EXPORT / IMPORT LOGIC ---
-  $("export").onclick = () => {
-    const all = loadAll();
-    if(!all.length){ toast("Nessun dato da esportare"); return; }
-    
-    const blob = new Blob([JSON.stringify(all, null, 2)], {type : 'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `backup_ms_fly_${nowISO().split('T')[0]}.json`;
-    a.click();
-    toast("Backup scaricato");
-  };
+  function createNewPage(pages) {
+    const p = document.createElement("div");
+    p.className = "print-page";
+    p.innerHTML = `<footer>Mainetti Solution - RAP (Intervento Tecnico).<br>Pagina generata automaticamente.</footer>`;
+    $("pdfStaging").appendChild(p);
+    pages.push(p);
+    return p;
+  }
 
-  $("importBtn").onclick = () => $("importFile").click();
-  
-  $("importFile").onchange = (e) => {
-    const f = e.target.files[0];
-    if(!f) return;
-    
-    const r = new FileReader();
-    r.onload = (ev) => {
-      try {
-        const imp = JSON.parse(ev.target.result);
-        if(!Array.isArray(imp)) throw new Error("Formato errato");
-        
-        const cur = loadAll();
-        imp.forEach(item => {
-          const idx = cur.findIndex(x => x.id === item.id);
-          if(idx === -1){
-            cur.push(item);
-          } else {
-            if (item.timestamp > cur[idx].timestamp) {
-               cur[idx] = item;
-            }
-          }
-        });
-        
-        saveAll(cur);
-        renderHistory();
-        toast("Importazione completata!");
-      } catch(err){
-        console.error(err);
-        toast("Errore nel file JSON");
+  function currentHeight(page){
+    return page.scrollHeight;
+  }
+
+  function createHeaderBlock(d){
+    const wrap = document.createElement('div');
+    const logo = localStorage.getItem(LOGO_KEY);
+    wrap.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #4ade80; padding-bottom:10px; margin-bottom:20px;">
+        <div>
+          <h1 style="border:none; margin:0; padding:0;">RAPPORTO INTERVENTO</h1>
+          <div style="font-size:12px; color:#666; margin-top:5px;">MAINETTI VISION: RAP - Technical Service</div>
+        </div>
+        ${logo ? `<img src="${logo}" style="height:50px" />` : ``}
+      </div>
+    `;
+    return wrap;
+  }
+
+  function createDataBlock(d){
+    const wrap = document.createElement('div');
+    const timeText = buildTimeText(d.job);
+    wrap.innerHTML = `
+      <h3>1. DATI COMMESSA E CLIENTE</h3>
+      <div class="p-row"><div class="p-label">Commessa/Ticket:</div><div class="p-val">${escapeHtml(d.job.missionId||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Cliente:</div><div class="p-val">${escapeHtml(d.client.name||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Indirizzo:</div><div class="p-val">${escapeHtml(d.client.addr||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Referente:</div><div class="p-val">${escapeHtml(d.client.contact||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Data:</div><div class="p-val">${escapeHtml(fmtDate(d.job.date)||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Orario:</div><div class="p-val">${escapeHtml(timeText)}</div></div>
+      <div class="p-row"><div class="p-label">Oggetto/Area:</div><div class="p-val">${escapeHtml(d.job.loc||"-")}</div></div>
+      <div class="p-row"><div class="p-label">Tipo Attivita':</div><div class="p-val">${escapeHtml(d.job.type||"-")}</div></div>
+    `;
+    return wrap;
+  }
+
+  function buildTimeText(job){
+    let timeText = "-";
+    if(job.startTime && job.endTime){
+      const t1 = new Date(`2000-01-01T${job.startTime}`);
+      const t2 = new Date(`2000-01-01T${job.endTime}`);
+      let diff = t2 - t1;
+      let pauseText = "";
+      if(job.hasPause && job.pauseStart && job.pauseEnd){
+        const pt1 = new Date(`2000-01-01T${job.pauseStart}`);
+        const pt2 = new Date(`2000-01-01T${job.pauseEnd}`);
+        if((pt2 - pt1) > 0) { diff -= (pt2 - pt1); pauseText = ` (Pausa: ${job.pauseStart}-${job.pauseEnd})`; }
       }
-    };
-    r.readAsText(f);
-    e.target.value = "";
-  };
-
-  function renderSigHTML(sigObj){
-    if(!sigObj) return "";
-    if(sigObj.type === "draw") return `<img src="${sigObj.val}" style="max-height:50px;border-bottom:1px solid #000"/>`;
-    return `<div style="font-family:serif;font-style:italic;font-size:16px">${sigObj.val}</div>`;
+      const h = Math.floor(diff / 36e5);
+      const m = Math.round((diff % 36e5) / 6e4);
+      timeText = `${job.startTime} - ${job.endTime}${pauseText} | Tot: ${h}h ${m}m`;
+    }
+    return timeText;
   }
 
-  // --- PDF GENERATION ---
-  $("pdf").onclick = () => {
-    const all = loadAll();
-    const rec = all.find(x=>x.id===currentId);
+  function createOutcomeBlock(d){
+    const ls = (d.result && d.result.deliverables) ? d.result.deliverables : {photo:false,tech:false,parts:false,other:false};
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <h3>4. ESITO E NOTE</h3>
+      <div class="p-row"><div class="p-label">Esito:</div><div class="p-val" style="font-weight:bold">${escapeHtml(d.result?.outcome||"-")}</div></div>
+      <div class="p-box">${escapeHtml(d.result?.notes||"-")}</div>
+      <h3>5. OUTPUT</h3>
+      <div class="check-grid">
+        <div class="check-item"><div class="check-box">${ls.photo?"X":""}</div> Foto</div>
+        <div class="check-item"><div class="check-box">${ls.tech?"X":""}</div> Schede</div>
+        <div class="check-item"><div class="check-box">${ls.parts?"X":""}</div> Ricambi</div>
+        <div class="check-item"><div class="check-box">${ls.other?"X":""}</div> Altro</div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function createSignaturesBlock(sigs){
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="sig-area">
+        <div class="sig-block">
+          <strong>Tecnico Mainetti Solution</strong>
+          ${renderSigHTML(sigs?.op)}
+          <div style="font-size:10px; margin-top:5px; text-align:center">${escapeHtml(sigs?.op?.name||"")}</div>
+        </div>
+        <div class="sig-block">
+          <strong>Cliente / Resp. Cantiere</strong>
+          ${renderSigHTML(sigs?.cl)}
+          <div style="font-size:10px; margin-top:5px; text-align:center">${escapeHtml(sigs?.cl?.name||"")}</div>
+        </div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function ensureBlockFitsOrNewPage(block, pages, maxH){
+    let page = pages[pages.length-1];
+    page.appendChild(block);
+    if(currentHeight(page) > maxH){
+      page.removeChild(block);
+      page = createNewPage(pages);
+      page.appendChild(block);
+    }
+  }
+
+  function appendSplitTextSection(title, text, pages, maxH){
+    let remaining = (text || "-").trim();
+    if(!remaining) remaining = "-";
+    let part = 1;
+
+    while(remaining.length){
+      const label = (part === 1) ? title : `${title} (continua)`;
+      const page = pages[pages.length-1];
+
+      // Tentativo: tutto in una pagina
+      const tryBlock = document.createElement('div');
+      tryBlock.innerHTML = `<h3>${escapeHtml(label)}</h3><div class="p-box"></div>`;
+      tryBlock.querySelector('.p-box').textContent = remaining;
+      page.appendChild(tryBlock);
+
+      if(currentHeight(page) <= maxH){
+        // OK, sta tutto
+        return;
+      }
+
+      // Overflow: dobbiamo splittare
+      page.removeChild(tryBlock);
+
+      // Se la pagina e' gia' piena, crea una nuova e riprova
+      if(currentHeight(page) > (maxH - 120)){
+        createNewPage(pages);
+        continue;
+      }
+
+      // Binary search per trovare la porzione massima che sta nella pagina
+      let low = 50;
+      let high = remaining.length;
+      let best = 0;
+
+      while(low <= high){
+        const mid = Math.floor((low + high) / 2);
+        let chunk = remaining.slice(0, mid);
+        const cut = chunk.lastIndexOf(' ');
+        if(cut > 80) chunk = chunk.slice(0, cut);
+
+        const test = document.createElement('div');
+        test.innerHTML = `<h3>${escapeHtml(label)}</h3><div class="p-box"></div>`;
+        test.querySelector('.p-box').textContent = chunk;
+        page.appendChild(test);
+
+        if(currentHeight(page) <= maxH){
+          best = chunk.length;
+          page.removeChild(test);
+          low = mid + 1;
+        } else {
+          page.removeChild(test);
+          high = mid - 1;
+        }
+      }
+
+      // Se non troviamo spazio nemmeno per un minimo, forza nuova pagina
+      if(best < 80){
+        createNewPage(pages);
+        continue;
+      }
+
+      // Append definitivo
+      const chunk = remaining.slice(0, best).trimEnd();
+      const finalBlock = document.createElement('div');
+      finalBlock.innerHTML = `<h3>${escapeHtml(label)}</h3><div class="p-box"></div>`;
+      finalBlock.querySelector('.p-box').textContent = chunk;
+      page.appendChild(finalBlock);
+
+      remaining = remaining.slice(best).trimStart();
+      part++;
+      if(remaining.length) createNewPage(pages);
+    }
+  }
+
+  function appendMaterialsTable(materials, pages, maxH){
+    if(!Array.isArray(materials) || materials.length === 0) return;
+    let page = pages[pages.length-1];
+
+    let container = document.createElement('div');
+    container.innerHTML = `<h3>3. MATERIALI E CONSUMO</h3><table class="p-table"><thead><tr><th style="width:15%">Q.ta'</th><th style="width:15%">Unita'</th><th>Articolo</th></tr></thead><tbody></tbody></table>`;
+    page.appendChild(container);
+    let tbody = container.querySelector('tbody');
+
+    // Se il titolo+tabella vuota non sta, nuova pagina
+    if(currentHeight(page) > maxH){
+      page.removeChild(container);
+      page = createNewPage(pages);
+      container = document.createElement('div');
+      container.innerHTML = `<h3>3. MATERIALI E CONSUMO</h3><table class="p-table"><thead><tr><th style="width:15%">Q.ta'</th><th style="width:15%">Unita'</th><th>Articolo</th></tr></thead><tbody></tbody></table>`;
+      page.appendChild(container);
+      tbody = container.querySelector('tbody');
+    }
+
+    for(let i=0; i<materials.length; i++){
+      const m = materials[i];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><b>${escapeHtml(String(m.q||""))}</b></td><td>${escapeHtml(String(m.u||""))}</td><td>${escapeHtml(String(m.n||""))}</td>`;
+      tbody.appendChild(tr);
+
+      if(currentHeight(page) > maxH){
+        tbody.removeChild(tr);
+        page = createNewPage(pages);
+
+        container = document.createElement('div');
+        container.innerHTML = `<div style="font-size:10px;color:#666;margin-bottom:5px">...continua Materiali</div><table class="p-table"><thead><tr><th style="width:15%">Q.ta'</th><th style="width:15%">Unita'</th><th>Articolo</th></tr></thead><tbody></tbody></table>`;
+        page.appendChild(container);
+        tbody = container.querySelector('tbody');
+        tbody.appendChild(tr);
+      }
+    }
+  }
+
+  async function generatePaginatedPDF(d, sigs) {
+    const jsPDFClass = getJsPDFClass();
+    if(!window.html2canvas || !jsPDFClass) {
+      throw new Error("Librerie PDF non caricate. Se sei offline, riapri l'app con Internet almeno una volta o aggiorna la cache.");
+    }
+
+    // 1) Pulizia staging
+    $("pdfStaging").innerHTML = "";
+
+    // 2) Costruzione pagine
+    const pages = [];
+    let page = createNewPage(pages);
+
+    // Area contenuto "sicura" (evita sovrapposizione col footer)
+    const MAX_H = 1010;
+
+    // Header + dati (non spezzare)
+    ensureBlockFitsOrNewPage(createHeaderBlock(d), pages, MAX_H);
+    ensureBlockFitsOrNewPage(createDataBlock(d), pages, MAX_H);
+
+    // Descrizione (splittabile)
+    appendSplitTextSection("2. DESCRIZIONE TECNICA", d.job?.desc || "-", pages, MAX_H);
+
+    // Materiali (tabella spezzabile per righe)
+    appendMaterialsTable(d.materials || [], pages, MAX_H);
+
+    // Esito + output (non spezzare) — se note lunghissime, meglio splittare
+    // Per non perdere coerenza, qui splittiamo SOLO le note se sono molto lunghe.
+    const notes = d.result?.notes || "-";
+    const outcomeSimple = JSON.parse(JSON.stringify(d));
+    outcomeSimple.result = { ...(d.result||{}), notes: (notes.length > 1400 ? notes.slice(0, 1400) + "\n\n[...continua nelle pagine successive...]" : notes) };
+    ensureBlockFitsOrNewPage(createOutcomeBlock(outcomeSimple), pages, MAX_H);
+    if(notes.length > 1400){
+      appendSplitTextSection("4B. NOTE (continua)", notes.slice(1400), pages, MAX_H);
+    }
+
+    // Firme (blocco indivisibile)
+    const sigBlock = createSignaturesBlock(sigs);
+    // Se non sta, sposta su nuova pagina
+    ensureBlockFitsOrNewPage(sigBlock, pages, MAX_H);
+
+    // 3) Render HTML -> PDF
+    const pdf = new jsPDFClass({ orientation: 'p', unit: 'mm', format: 'a4' });
+    for(let i=0; i<pages.length; i++){
+      if(i>0) pdf.addPage();
+      const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+    }
+
+    const safeName = (d.client?.name || 'Cliente').toString().replace(/[^a-z0-9\-_ ]/gi,'').trim().replace(/\s+/g,'_');
+    pdf.save(`RAP_${safeName}.pdf`);
+
+    // 4) Pulizia
+    $("pdfStaging").innerHTML = "";
+  }
+
+  $("pdfBtn").onclick = async () => {
+    const rec = loadAll().find(x=>x.id===currentId);
     if(!rec) return;
-
-    // Populate Print Area
-    $("p_id").textContent = rec.id;
-    $("p_dt").textContent = rec.data.mission.date + " " + rec.data.mission.time;
-    $("p_loc").textContent = rec.data.mission.loc;
-    $("p_uas").textContent = rec.data.mission.uas;
-    $("p_opId").textContent = rec.data.mission.opId || "-"; // NEW 3.0
-    $("p_go").textContent = rec.data.outcome.go;
-    $("p_notes").textContent = (rec.data.outcome.actions ? "Azioni: "+rec.data.outcome.actions+". " : "") + rec.data.outcome.notes;
-    
-    const labels = {
-      docs: "Documenti", 
-      eid: "Etichetta UAS", // NEW 3.0
-      airspace: "Spazio Aereo", area: "Area Sicura",
-      meteo: "Meteo", batt: "Batterie", props: "Eliche",
-      cam: "Payload", fw: "Firmware", gnss: "GNSS/RTH"
-    };
-    $("p_checks").innerHTML = Object.keys(rec.data.checks).map(k => 
-      `<li>${labels[k]}: <b>${rec.data.checks[k]?"SI":"NO"}</b></li>`
-    ).join("");
-
-    // Signatures Print
-    $("p_op_name").textContent = rec.signatures.op.name;
-    $("p_sign_dt").textContent = rec.signatures.op.date;
-    $("p_op_sig").innerHTML = renderSigHTML(rec.signatures.op);
-
-    const mgr = rec.signatures.mgr;
-    if(mgr){
-      $("p_mgr_section").classList.remove("hidden");
-      $("p_mgr_name").textContent = mgr.name;
-      $("p_mgr_sig").innerHTML = renderSigHTML(mgr);
-    } else {
-      $("p_mgr_section").classList.add("hidden");
+    const btn = $("pdfBtn");
+    btn.disabled = true;
+    toast("Generazione PDF in corso...");
+    try {
+      // Piccolo delay per dare tempo al toast di apparire
+      await new Promise(r => setTimeout(r, 120));
+      await generatePaginatedPDF(rec.data, rec.sigs);
+      toast("PDF creato!");
+    } catch (err) {
+      console.error(err);
+      toast("Errore PDF: " + (err && err.message ? err.message : "controlla console"));
+    } finally {
+      btn.disabled = false;
     }
-
-    const own = rec.signatures.owner;
-    if(own){
-      $("p_owner_section").classList.remove("hidden");
-      $("p_owner_name").textContent = own.name;
-      $("p_owner_sig").innerHTML = renderSigHTML(own);
-    } else {
-      $("p_owner_section").classList.add("hidden");
-    }
-
-    // Gen PDF
-    const el = $("printWrap");
-    html2canvas(el, {scale:2}).then(c => {
-      const img = c.toDataURL("image/png");
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      const w = pdf.internal.pageSize.getWidth();
-      const h = (c.height * w) / c.width;
-      pdf.addImage(img, 'PNG', 0, 0, w, h);
-      pdf.save(`Checklist_${rec.id}.pdf`);
-    });
   };
 
-  // --- HISTORY & LOADING ---
-
+  // --- HISTORY & INIT ---
   function renderHistory(){
-    const all = loadAll();
-    all.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-    $("history").innerHTML = all.slice(0,5).map(r => `
+    const all = loadAll().sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+    $("history").innerHTML = all.map(r => `
       <div class="hist-item">
         <div class="hist-info" onclick="loadRec('${r.id}')">
-          <div style="font-weight:bold">${(r.data && r.data.mission && r.data.mission.loc) ? r.data.mission.loc : "N/D"}</div>
-          <div style="font-size:11px;color:#888">${(r.data && r.data.mission) ? r.data.mission.date : "?"} - ${r.status.toUpperCase()}</div>
+          <b>${r.data.client.name || "?"}</b><br>
+          <span style="font-size:11px;color:#888">${fmtDate(r.data.job.date)}</span>
         </div>
         <button class="hist-del" onclick="deleteRec('${r.id}', event)">🗑️</button>
       </div>
     `).join("");
   }
-  
   window.loadRec = (id) => {
-    try {
-      const r = loadAll().find(x=>x.id===id);
-      if(!r) return;
-      currentId = r.id;
-      
-      const d = r.data || {}; 
-      const m = d.mission || {};
-      $("missionId").value = m.id || "";
-      $("date").value = m.date || "";
-      $("time").value = m.time || "";
-      $("location").value = m.loc || "";
-      $("uas").value = m.uas || "";
-      $("opId").value = m.opId || "CHE-RP-tf2s8sv9yo41"; // Default 3.0
-      $("opType").value = m.type || "";
-      
-      const c = d.checks || {};
-      $("docsOk").checked = !!c.docs;
-      $("eidLabel").checked = !!c.eid; // NEW 3.0
-      $("airspaceOk").checked = !!c.airspace;
-      $("areaClear").checked = !!(c.area || c.areaClear); 
-      $("meteoOk").checked = !!c.meteo;
-      $("battOk").checked = !!c.batt;
-      $("propsOk").checked = !!c.props;
-      $("camOk").checked = !!c.cam;
-      $("fwOk").checked = !!c.fw;
-      $("gnssOk").checked = !!c.gnss;
-
-      const out = d.outcome || {};
-      $("go").value = out.go || "";
-      $("actions").value = out.actions || "";
-      $("notes").value = out.notes || "";
-
-      const ext = d.extra || {};
-      clearCanvas("opCanvas"); clearCanvas("mgrCanvas"); clearCanvas("ownerCanvas");
-
-      $("needManager").checked = !!ext.needManager;
-      toggleBlock("mgrBlock", !!ext.needManager);
-      $("mgrName").value = ext.mgrName || "";
-
-      $("needOwner").checked = !!ext.needOwner;
-      toggleBlock("ownerBlock", !!ext.needOwner);
-      $("ownerName").value = ext.ownerName || "";
-
-      if(r.status === "signed" && r.signatures){
-        const op = r.signatures.op || {};
-        $("opName").value = op.name || "";
-        if(op.type){
-            $("opSigType").value = op.type;
-            toggleSig("op");
-            if(op.type === "draw") drawFromUrl("opCanvas", op.val);
-            else $("opTyped").value = op.val;
-        }
-
-        if(r.signatures.mgr){
-          const mgr = r.signatures.mgr;
-          $("mgrSigType").value = mgr.type;
-          toggleSig("mgr");
-          if(mgr.type === "draw") drawFromUrl("mgrCanvas", mgr.val);
-          else $("mgrTyped").value = mgr.val;
-        }
-
-        if(r.signatures.owner){
-          const own = r.signatures.owner;
-          $("ownerSigType").value = own.type;
-          toggleSig("owner");
-          if(own.type === "draw") drawFromUrl("ownerCanvas", own.val);
-          else $("ownerTyped").value = own.val;
-        }
-
-        $("pdf").disabled = false;
-        $("bSigned").textContent = "Firmata";
-        $("bSigned").classList.add("ok");
-        document.querySelectorAll("input, select, textarea").forEach(i => i.disabled=true);
-        $("exitView").classList.remove("hidden");
-
-      } else {
-        $("pdf").disabled = true;
-        $("bSigned").textContent = "Non firmata";
-        $("bSigned").classList.remove("ok");
-        document.querySelectorAll("input, select, textarea").forEach(i => i.disabled=false);
-        $("exitView").classList.add("hidden");
-      }
-      toast("Dati caricati!");
-    } catch(e) {
-      console.error(e);
-      toast("Errore (Prova Reset Dati)");
-    }
+    const r = loadAll().find(x=>x.id===id); if(!r) return;
+    currentId = r.id; const d = r.data;
+    $("missionId").value = d.job.missionId||""; $("clientName").value = d.client.name; $("address").value = d.client.addr; $("contact").value = d.client.contact; $("date").value = d.job.date; 
+    $("startTime").value = d.job.startTime||""; $("endTime").value = d.job.endTime||""; 
+    $("pauseCheck").checked = d.job.hasPause||false; $("pauseStart").value = d.job.pauseStart||""; $("pauseEnd").value = d.job.pauseEnd||""; togglePause(); 
+    $("location").value = d.job.loc; $("type").value = d.job.type; $("desc").value = d.job.desc; 
+    materials = d.materials || []; renderMaterials();
+    $("outcome").value = d.result.outcome; $("notes").value = d.result.notes; 
+    if(d.result.deliverables){ $("del_photo").checked = d.result.deliverables.photo; $("del_tech").checked = d.result.deliverables.tech; $("del_parts").checked = d.result.deliverables.parts; $("del_other").checked = d.result.deliverables.other; }
+    const isSigned = r.status === "signed"; toggleForm(!isSigned);
+    if(isSigned){
+      $("pdfBtn").disabled = false; $("exitView").classList.remove("hidden");
+      const op=r.sigs.op, cl=r.sigs.cl;
+      if(op.type==="draw") drawFromUrl("opCanvas",op.val); else $("opTyped").value=op.val;
+      if(cl.type==="draw") drawFromUrl("clCanvas",cl.val); else $("clTyped").value=cl.val;
+    } else { $("pdfBtn").disabled = true; $("exitView").classList.add("hidden"); clearCanvas("opCanvas"); clearCanvas("clCanvas"); }
+    toast("Scheda Caricata");
   };
+  window.deleteRec = (id,e) => { e.stopPropagation(); if(confirm("Eliminare?")) { saveAll(loadAll().filter(x=>x.id!==id)); renderHistory(); }};
+  $("export").onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(loadAll(), null, 2)], {type:'application/json'})); a.download = `backup_${nowISO().split('T')[0]}.json`; a.click(); };
+  $("importBtn").onclick = () => $("importFile").click();
+  $("importFile").onchange = (e) => { const r=new FileReader(); r.onload=(ev)=>{ try{ let i=JSON.parse(ev.target.result); if(!Array.isArray(i)) i=[i]; saveAll([...loadAll(), ...i]); renderHistory(); toast("Import OK"); }catch{toast("Errore File");}}; r.readAsText(e.target.files[0]); };
 
-  $("exitView").onclick = () => location.reload();
-  $("reset").onclick = () => location.reload();
-
-  (function init(){
-    $("date").value = new Date().toISOString().split("T")[0];
-    renderHistory();
-  })();
+  (function init(){ $("date").value = new Date().toISOString().split("T")[0]; checkLogo(); renderHistory(); })();
 </script>
 </body>
 </html>
